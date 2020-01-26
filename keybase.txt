@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/lukahn
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of http://lukahn.com
+  * I am lukahn (https://keybase.io/lukahn) on keybase.
+  * I have a public key ASDXUg7aWURoPqvIHBJcycLQSeHoxGV06MdYif5ROffBjgo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "01200f54e9914f04243b61ce197b0e6ddd4a46bf26159157d52360cd6327dc623f2d0a",
+      "host": "keybase.io",
+      "kid": "0120d7520eda5944683eabc81c125cc9c2d049e1e8c46574e8c75889fe5139f7c18e0a",
+      "uid": "f8fc87db3dffc160b3406e8376bf7e19",
+      "username": "lukahn"
+    },
+    "merkle_root": {
+      "ctime": 1554180307,
+      "hash": "1dca6ed0a0c745959fa2679b8ff636f0ea0ed842bf8214051bef4167fe7b54cb0a00c2c38d97da55cd57de7844316ead25e528b520567373128c21e4d68e2e94",
+      "hash_meta": "e7010a15c567bff6a61a42404fad1682166f2cce1938558e72183c828e587a96",
+      "seqno": 5076993
+    },
+    "service": {
+      "entropy": "EDDSG0bvN5eE6tb8wpFWNgW9",
+      "hostname": "lukahn.com",
+      "protocol": "http:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "3.1.2"
+  },
+  "ctime": 1554180335,
+  "expire_in": 504576000,
+  "prev": "2f8bfc800976b5d73ec96f09f0f897c72ef6aa5c7a76639040357c62abd6f92c",
+  "seqno": 20,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEg11IO2llEaD6ryBwSXMnC0Enh6MRldOjHWIn+UTn3wY4Kp3BheWxvYWTESpcCFMQgL4v8gAl2tdc+yW8J8PiXxy72qlx6dmOQQDV8YqvW+SzEICBn7FP9oTiOK9WpWuK04v6QZLTBQNa1uBzkHrEUdjj+AgHCo3NpZ8RAEpDuLo7WJGz9H4lS1Xnn7ooor7U9lYGaGYRK5nvqxjbzWuh1UY11L3OXm8uzYwN/IyJd3AcxhtqTzKhQetTyAahzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIPv03YOtPg43Z3dvN/B0NUlVDKna4DkgsSNGr8DaSEmpo3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/lukahn
+
+==================================================================
