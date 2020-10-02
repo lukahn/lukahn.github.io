@@ -1,10 +1,10 @@
 ---
 layout:     post
 title:      Creating the blog
-date:       2020-10-02 12:30:00
+date:       2020-10-01 12:30:00
 author:     Luke Wakefield
 summary:    The steps I took to create the blog.
-categories: jekyll
+categories: website
 thumbnail: heart
 tags:
  - creating

@@ -1,10 +1,10 @@
 ---
 layout:     post
 title:      Handy OpenSSL commands
-date:       2020-10-02 13:15:00
+date:       2020-10-01 13:15:00
 author:     Luke Wakefield
 summary:    A compilation of useful commands when using OpenSSL.
-categories: jekyll
+categories: openssl
 thumbnail: heart
 tags:
  - openssl
