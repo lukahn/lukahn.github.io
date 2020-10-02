@@ -1,0 +1,37 @@
+# Site settings
+title: "Lukahn"
+email: contact@lukahn.com
+description: "A dark blog theme for Jekyll."
+baseurl: ""
+url: "https://lukahn.com"
+title_description: "Hi, I'm a Security Engineer, and this blog will contain writeups of anything interesting I've been working on, as well as a code dump for useful commands."
+title_image: "https://pbs.twimg.com/profile_images/1500428991/android_luke_400x400.jpg"
+google_analytics: "UA-20365477-4"
+disqus_account: cartenoire
+github_repository: https://github.com/lukahn
+addthis_id: ra-513c6fa83da6ec67
+post_limit: 5
+
+# Social usernames/URLs
+twitter_username: lukahn
+github_username:  lukahn
+instagram_username: 
+reddit_username: 
+linkedin_link: https://www.linkedin.com/in/lukewakefield5/
+stackoverflow_link: https://stackoverflow.com/users/9336294/lukahn
+xing_link:
+facebook_link:
+
+# Footer
+footer_left: "Made with <i class=\"fa fa-heart\"></i> by <a href=\"https://twitter.com/lukahn\">Luke Wakefield</a>"
+footer_right: "&lt;/&gt; on <a href=\"https://github.com/lukahn\">Github</a> &nbsp;<i class=\"fa fa-github-alt\"></i>"
+
+# Build settings
+markdown: kramdown
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+permalink: pretty
+exclude: [vendor]
