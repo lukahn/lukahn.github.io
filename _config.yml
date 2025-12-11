@@ -10,19 +10,20 @@ github_repository: https://github.com/lukahn
 post_limit: 5
 
 # Social usernames/URLs
+linktree: lukahn
 twitter_username: lukahn
+mastodon_link: https://ioc.exchange/@lukahn
+bluesky_username: lukahn.com
 github_username:  lukahn
-instagram_username: 
-reddit_username: 
 linkedin_link: https://www.linkedin.com/in/lukewakefield5/
 stackoverflow_link: https://stackoverflow.com/users/9336294/lukahn
-xing_link:
-facebook_link:
-mastodon_link: https://ioc.exchange/@lukahn
+facebook_link: 
+instagram_username: 
+reddit_username: 
 
 # Footer
 footer_left: "Made with <i class=\"fa fa-heart\"></i> by <a href=\"https://twitter.com/lukahn\">Luke Wakefield</a>"
-footer_right: "&lt;/&gt; on <a href=\"https://github.com/lukahn\">Github</a> &nbsp;<i class=\"fa fa-github-alt\"></i>"
+footer_right: "&lt;/&gt; on <a href=\"https://github.com/lukahn\">Github</a> &nbsp;<i class=\"fa-brands fa-github-alt\"></i>"
 
 # Build settings
 markdown: kramdown
