@@ -2,22 +2,21 @@
 
 A simple Jekyll theme for blogging. Not named after the coffee.
 
-![Homepage](http://i.imgur.com/xlmHArV.png)
+![Homepage](images/xlmHArV.png)
 
 ### Article
-![Article](http://i.imgur.com/8rD8FfC.png)
+![Article](images/8rD8FfC.png)
 
-### Disqus Comments
-![Comments](http://i.imgur.com/TBZHQwF.png)
+
 
 ### Posts grouped by year
-![All Posts](http://i.imgur.com/9bNs2Sc.png)
+![All Posts](images/9bNs2Sc.png)
 
 ### JavaScript Search
-![Search](http://i.imgur.com/yQqMeSl.png)
+![Search](images/yQqMeSl.png)
 
 ### Menu by mmenu
-![Menu](http://i.imgur.com/SClrNSH.png)
+![Menu](images/SClrNSH.png)
 
 ## Contact
 If you wish to contact me regarding this theme please raise an issue on GitHub,
@@ -43,10 +42,6 @@ The following tools and libraries are used in this theme
 ### CSS
  * [Bootstrap](http://getbootstrap.com/)
  * [Font Awesome](http://fortawesome.github.io/Font-Awesome/)
-
-### Social
- * [AddThis](http://www.addthis.com/)
- * [Disqus](https://disqus.com/)
 
 ### Other
  * [Real Favicon Generator](http://realfavicongenerator.net/)

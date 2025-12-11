@@ -5,11 +5,8 @@ description: "A dark blog theme for Jekyll."
 baseurl: ""
 url: "https://lukahn.com"
 title_description: "Hi, I'm a Security Engineer, and this blog will contain writeups of anything interesting I've been working on, as well as a code dump for useful commands."
-title_image: "https://pbs.twimg.com/profile_images/1500428991/android_luke_400x400.jpg"
-google_analytics: "UA-20365477-4"
-disqus_account: cartenoire
+title_image: "/images/android_luke_400x400.jpg"
 github_repository: https://github.com/lukahn
-addthis_id: ra-513c6fa83da6ec67
 post_limit: 5
 
 # Social usernames/URLs
