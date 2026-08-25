@@ -1,46 +1,30 @@
-# Carte Noire
+# Lukahn
 
-A simple Jekyll theme for blogging. Not named after the coffee.
-
-![Homepage](images/xlmHArV.png)
-
-### Article
-![Article](images/8rD8FfC.png)
-
-
-
-### Posts grouped by year
-![All Posts](images/9bNs2Sc.png)
-
-### JavaScript Search
-![Search](images/yQqMeSl.png)
-
-### Menu by mmenu
-![Menu](images/SClrNSH.png)
-
-## Contact
-If you wish to contact me regarding this theme please raise an issue on GitHub,
-tweet me [@_jacobtomlinson](http://www.twitter.com/_jacobtomlinson) or email me
-[jacob@jacobtomlinson.co.uk](mailto:jacob@jacobtomlinson.co.uk).
-
-## Contribution
-Pull requests are very welcome.
+Website for [lukahn.com](https://lukahn.com) — the personal blog of Luke Wakefield, covering security engineering write-ups, handy command references, and other technical notes.
 
 ## Theme
-This jekyll theme has been created from scratch. Ideas and inspiration are taken
-from other places but the code is my own.
+
+Based on the [Carte Noire](https://github.com/jacobtomlinson/carte-noire) Jekyll theme by Jacob Tomlinson (demo at <https://carte-noire.jacobtomlinson.co.uk/>), with substantial customisation.
 
 ## Tools and Libraries
-The following tools and libraries are used in this theme
+
+Third-party assets are vendored locally, so no external requests are made at page load.
 
 ### JavaScript
- * [HighlightJS](https://highlightjs.org/) v11 (only on pages with code blocks)
- * [Simple Jekyll Search](https://github.com/christian-fei/Simple-Jekyll-Search) (search page only)
- * [MathJax](https://www.mathjax.org/) v4 (only on pages using LaTeX)
+- Vanilla JavaScript — menu, theme toggle, and title fitting (no jQuery)
+- [highlight.js](https://highlightjs.org/) (only on pages with code blocks)
+- [Simple Jekyll Search](https://github.com/christian-fei/Simple-Jekyll-Search) (search page only)
+- [MathJax](https://www.mathjax.org/) v4 (only on pages using LaTeX)
 
 ### CSS
- * [Bootstrap 5](https://getbootstrap.com/)
- * [Font Awesome 7](https://fontawesome.com/)
+- [Bootstrap 5](https://getbootstrap.com/) (subset with PurgeCSS)
+- [Font Awesome 7](https://fontawesome.com/) (subset with PurgeCSS)
+- Self-hosted [Google Fonts](https://fonts.google.com/) — Open Sans, Montserrat, Anonymous Pro (latin subsets)
+
+### Build tooling
+- [Jekyll 4](https://jekyllrb.com/) (see `Gemfile`)
+- [PurgeCSS](https://purgecss.dev/) and [clean-css](https://github.com/clean-css/clean-css) for CSS subsetting and minification
+- Python (`scripts/update_dependencies.py`) for downloading vendor assets
 
 ## Building & deployment
 This site is built with **Jekyll 4** and deployed via GitHub Actions
@@ -64,10 +48,6 @@ runs weekly and opens a pull request whenever any of them can be updated. See
 The workflow also runs `npm run purge` (`scripts/purge-css.js`), which subsets
 Bootstrap and Font Awesome CSS down to only the rules the site actually uses
 (keeping the CSS files roughly 5–15 KB instead of 120+ KB).
-
-### Other
- * [Real Favicon Generator](http://realfavicongenerator.net/)
- * [Google Analytics](http://www.google.com/analytics/)
 
 ## License
 The jekyll theme, HTML, CSS and JavaScript is licensed under GPLv3 (unless stated otherwise in the file).
