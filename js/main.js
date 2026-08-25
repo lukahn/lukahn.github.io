@@ -69,14 +69,13 @@
     window.addEventListener('resize', fitTitles);
   }
 
-  // Theme toggle (light/dark) — user-selectable colours
+  // Theme toggle (light/dark) — dark is the default
   var themeToggle = document.querySelector('.theme-toggle');
-  var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
   var storedTheme = null;
   try { storedTheme = localStorage.getItem('theme'); } catch (e) {}
 
   function currentTheme() {
-    return document.documentElement.getAttribute('data-theme') || (prefersLight ? 'light' : 'dark');
+    return document.documentElement.getAttribute('data-theme') || 'dark';
   }
 
   function applyTheme(theme) {

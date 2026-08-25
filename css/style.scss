@@ -1095,9 +1095,32 @@ td{
 .single .article .content a,
 .feedback a,
 .excerpt a,
-.error-text a {
+.error-text a,
+.footer .footer-item a,
+.prose a {
 	text-decoration: underline;
 	text-underline-offset: 2px;
+}
+
+/* Prose layout for static pages (About, Glossary) */
+.prose {
+	font-size: 18px;
+	line-height: 170%;
+	max-width: 80ch;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+
+	ul,
+	ol {
+		text-align: left;
+	}
+}
+
+/* Accessibility statement link in the footer */
+.footer-accessibility {
+	flex: 1 1 100%;
+	font-size: 14px;
 }
 
 /* Visible label for the search field (3.3.2) */
@@ -1174,10 +1197,4 @@ td{
 
 [data-theme="light"] {
 	@include light-theme;
-}
-
-@media (prefers-color-scheme: light) {
-	:root:not([data-theme="dark"]) {
-		@include light-theme;
-	}
 }
