@@ -107,6 +107,20 @@ layout: default
       </div>
 
       {% if site.related_posts.length > 0 %}
+      {% assign newer_post = nil %}
+      {% assign older_post = nil %}
+      {% assign found_current = false %}
+      {% for post in site.posts %}
+        {% if found_current %}
+          {% assign older_post = post %}
+          {% break %}
+        {% endif %}
+        {% if post.url == page.url %}
+          {% assign found_current = true %}
+        {% else %}
+          {% assign newer_post = post %}
+        {% endif %}
+      {% endfor %}
       <div class="content-panel related clearfix">
         {% for post in site.related_posts limit:1 %}
         <div class="related-header">
@@ -126,19 +140,19 @@ layout: default
         {% endfor %}
         <hr />
         <div class="previous previous-next">
-          {% if page.previous %}
+          {% if older_post %}
           <p>
-            <a href="{{ site.baseurl }}{{ page.previous.url }}">{{ page.previous.title }}</a>
+            <a href="{{ site.baseurl }}{{ older_post.url }}">{{ older_post.title }}</a>
           </p>
-          <p class="date">Published {{ page.previous.date | date: "%B %-d, %Y" }}</p>
+          <p class="date">Published {{ older_post.date | date: "%B %-d, %Y" }}</p>
           {% endif %}
         </div>
         <div class="next previous-next">
-          {% if page.next %}
+          {% if newer_post %}
           <p>
-            <a href="{{ site.baseurl }}{{ page.next.url }}">{{ page.next.title }}</a>
+            <a href="{{ site.baseurl }}{{ newer_post.url }}">{{ newer_post.title }}</a>
           </p>
-          <p class="date">Published {{ page.next.date | date: "%B %-d, %Y" }}</p>
+          <p class="date">Published {{ newer_post.date | date: "%B %-d, %Y" }}</p>
           {% endif %}
         </div>
       </div>

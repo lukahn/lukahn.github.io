@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
@@ -30,9 +30,9 @@ jobs:
         run: python3 scripts/update_dependencies.py
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Install CSS purge tooling
         run: npm ci
@@ -41,7 +41,7 @@ jobs:
         run: npm run purge
 
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: 'chore: update vendored front-end dependencies'
           title: 'chore: update vendored front-end dependencies'
@@ -50,8 +50,8 @@ jobs:
           body: |
             Automated update of the locally-hosted third-party assets:
             - Font Awesome 7
-            - highlight.js
+            - highlight.js 11
             - Simple Jekyll Search
-            - MathJax (v2, pinned)
-            - Bootstrap 3 (pinned)
+            - MathJax 4
+            - Bootstrap 5
             - Google Fonts (Open Sans, Montserrat, Anonymous Pro — latin subset only)

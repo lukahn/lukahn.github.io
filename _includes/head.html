@@ -24,8 +24,14 @@
 
 
 {% if page.content contains '$$' or page.content contains '<script type="math/tex' %}
-<!-- MathJax for LaTeX -->
-<script type="text/javascript" src="{{ site.baseurl }}/js/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+<!-- MathJax v4 for LaTeX -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script type="text/javascript" src="{{ site.baseurl }}/js/mathjax/tex-svg.js" defer></script>
 {% endif %}
 
 </head>

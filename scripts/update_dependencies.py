@@ -62,10 +62,10 @@ ASSETS = [
      "js/highlight.min.js"),
     ("simple-jekyll-search@1/dest/simple-jekyll-search.min.js",
      "js/jekyll-search.js"),
-    ("bootstrap@3.4.1/dist/css/bootstrap.min.css",
+    ("bootstrap@5/dist/css/bootstrap.min.css",
      "css/bootstrap.min.css"),
-    ("mathjax@2.7.9/MathJax.js",
-     "js/mathjax/MathJax.js"),
+    ("mathjax@4/tex-svg.js",
+     "js/mathjax/tex-svg.js"),
 ]
 
 
@@ -78,6 +78,24 @@ def update_static_assets() -> bool:
             changed = True
         else:
             print(f"  up to date  {local}")
+    return changed
+
+
+def rewrite_fontawesome_font_paths() -> bool:
+    """Font Awesome's published CSS references `../webfonts/...`, but this
+    repo stores the fonts under `fonts/fontawesome/v7/`. Rewrite the URLs so
+    the icons resolve correctly."""
+    changed = False
+    for local in ("css/fontawesome/v7/solid.min.css",
+                  "css/fontawesome/v7/brands.min.css",
+                  "css/fontawesome/v7/fontawesome.min.css"):
+        path = ROOT / local
+        data = path.read_bytes()
+        rewritten = data.replace(b"url(../webfonts/",
+                                 b"url(../../../fonts/fontawesome/v7/")
+        if rewritten != data:
+            path.write_bytes(rewritten)
+            changed = True
     return changed
 
 
@@ -159,6 +177,7 @@ def update_fonts() -> bool:
 def main() -> int:
     print("Updating vendored dependencies...")
     changed = update_static_assets()
+    changed = rewrite_fontawesome_font_paths() or changed
     changed = update_fonts() or changed
     print("Done. Changes detected." if changed else "Done. No changes.")
     return 0

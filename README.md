@@ -34,13 +34,25 @@ from other places but the code is my own.
 The following tools and libraries are used in this theme
 
 ### JavaScript
- * [HighlightJS](https://highlightjs.org/) (only on pages with code blocks)
+ * [HighlightJS](https://highlightjs.org/) v11 (only on pages with code blocks)
  * [Simple Jekyll Search](https://github.com/christian-fei/Simple-Jekyll-Search) (search page only)
- * [MathJax](https://www.mathjax.org/) (only on pages using LaTeX)
+ * [MathJax](https://www.mathjax.org/) v4 (only on pages using LaTeX)
 
 ### CSS
- * [Bootstrap](http://getbootstrap.com/)
- * [Font Awesome](http://fortawesome.github.io/Font-Awesome/)
+ * [Bootstrap 5](https://getbootstrap.com/)
+ * [Font Awesome 7](https://fontawesome.com/)
+
+## Building & deployment
+This site is built with **Jekyll 4** and deployed via GitHub Actions
+(`.github/workflows/pages.yml`). Ruby gems are managed in `Gemfile`; there is no
+`github-pages` gem dependency. To build locally:
+
+```
+bundle install
+bundle exec jekyll serve
+```
+
+In the repository's Pages settings, set the source to **GitHub Actions**.
 
 ## Dependency updates
 Third-party assets (Font Awesome, HighlightJS, Simple Jekyll Search, MathJax,

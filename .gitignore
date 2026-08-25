@@ -23,7 +23,9 @@ Temporary Items
 
 # Jekyll Specific
 _site/
-.vendor/
+.jekyll-cache/
+vendor/
+.bundle/
 
 # Node tooling
 node_modules/

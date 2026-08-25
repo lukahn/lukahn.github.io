@@ -207,6 +207,13 @@ body.menu-open #my-menu {
 	}
 }
 
+/* Clearfix (kept independent of any framework) */
+.clearfix::after {
+	display: block;
+	clear: both;
+	content: "";
+}
+
 .links {
 	margin-top: 50px;
 	text-align: center;

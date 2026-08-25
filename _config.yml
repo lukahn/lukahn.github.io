@@ -32,5 +32,8 @@ kramdown:
   input: GFM
   syntax_highlighter: rouge
 
+plugins:
+  - jekyll-feed
+
 permalink: pretty
-exclude: [vendor, node_modules]
+exclude: [vendor, node_modules, scripts, package.json, package-lock.json]
