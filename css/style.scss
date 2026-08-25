@@ -1092,6 +1092,22 @@ td{
 	}
 }
 
+/* Underline inline links so they aren't distinguished by colour alone (1.4.1) */
+.single .article .content a,
+.feedback a,
+.excerpt a,
+.error-text a {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+/* Visible label for the search field (3.3.2) */
+#search-container label {
+	display: block;
+	margin-bottom: 8px;
+	color: $white;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
