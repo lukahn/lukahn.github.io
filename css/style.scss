@@ -214,6 +214,26 @@ body.menu-open #my-menu {
 	content: "";
 }
 
+/* Bootstrap 3 grid compatibility — this theme's markup predates Bootstrap 5's
+   flex-based grid. Restore float-based rows and columns. */
+.row {
+	display: block;
+}
+
+.row::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.row > * {
+	max-width: none;
+}
+
+[class*="col-"] {
+	float: left;
+}
+
 .links {
 	margin-top: 50px;
 	text-align: center;
@@ -851,11 +871,6 @@ body.menu-open #my-menu {
 	.date {
 		color: $light-medium;
 	}
-}
-
-.search-hr {
-	width: 700px;
-	border-color: $light-medium;
 }
 
 .error {
