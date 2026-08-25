@@ -40,6 +40,9 @@ jobs:
       - name: Subset CSS (purge unused rules)
         run: npm run purge
 
+      - name: Bundle vendor CSS
+        run: npm run bundle-vendor
+
       - name: Create pull request
         uses: peter-evans/create-pull-request@v8
         with:

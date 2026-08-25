@@ -4,7 +4,8 @@
   "private": true,
   "description": "Build tooling for the lukahn.com Jekyll site (subsets Bootstrap and Font Awesome CSS to only the rules the site uses).",
   "scripts": {
-    "purge": "node scripts/purge-css.js"
+    "purge": "node scripts/purge-css.js",
+    "bundle-vendor": "node scripts/bundle-vendor-css.js"
   },
   "devDependencies": {
     "glob": "^13.0.6",
