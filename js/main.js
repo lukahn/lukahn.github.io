@@ -6,9 +6,16 @@
   var menu = document.getElementById('my-menu');
   var toggle = document.querySelector('.menu-button');
   var closeBtn = document.querySelector('.menu-close');
+  var main = document.querySelector('main');
+  var footer = document.querySelector('footer');
+  var FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
   function openMenu() {
     document.body.classList.add('menu-open');
+    // Remove page content from the tab order and accessibility tree
+    // while the menu is open.
+    if (main) main.inert = true;
+    if (footer) footer.inert = true;
     if (toggle) {
       toggle.setAttribute('aria-expanded', 'true');
       toggle.style.display = 'none';
@@ -18,6 +25,8 @@
 
   function closeMenu(returnFocus) {
     document.body.classList.remove('menu-open');
+    if (main) main.inert = false;
+    if (footer) footer.inert = false;
     if (toggle) {
       toggle.setAttribute('aria-expanded', 'false');
       toggle.style.display = '';
@@ -41,7 +50,25 @@
       if (e.target.closest('a')) closeMenu(false);
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closeMenu(true);
+      if (e.key === 'Escape') {
+        closeMenu(true);
+        return;
+      }
+      // Focus trap: keep Tab cycling within the open menu
+      if (e.key !== 'Tab' || !document.body.classList.contains('menu-open')) return;
+      var focusables = menu.querySelectorAll(FOCUSABLE);
+      if (!focusables.length) return;
+      var first = focusables[0];
+      var last = focusables[focusables.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else if (document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     });
   }
 
@@ -69,34 +96,52 @@
     window.addEventListener('resize', fitTitles);
   }
 
-  // Theme toggle (light/dark) — dark is the default
+  // Theme toggle (light/dark)
   var themeToggle = document.querySelector('.theme-toggle');
   var storedTheme = null;
   try { storedTheme = localStorage.getItem('theme'); } catch (e) {}
+  var mql = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
 
-  function currentTheme() {
-    return document.documentElement.getAttribute('data-theme') || 'dark';
+  function effectiveTheme() {
+    var attr = document.documentElement.getAttribute('data-theme');
+    if (attr === 'light' || attr === 'dark') return attr;
+    return (mql && mql.matches) ? 'light' : 'dark';
+  }
+
+  function updateToggle() {
+    if (!themeToggle) return;
+    var isLight = effectiveTheme() === 'light';
+    themeToggle.textContent = isLight ? 'Switch to dark mode' : 'Switch to light mode';
+    themeToggle.setAttribute('aria-pressed', String(isLight));
   }
 
   function applyTheme(theme) {
-    if (theme) {
+    if (theme === 'light' || theme === 'dark') {
       document.documentElement.setAttribute('data-theme', theme);
     } else {
       document.documentElement.removeAttribute('data-theme');
     }
-    if (themeToggle) {
-      var isLight = currentTheme() === 'light';
-      themeToggle.textContent = isLight ? 'Dark mode' : 'Light mode';
-      themeToggle.setAttribute('aria-pressed', String(isLight));
-    }
+    updateToggle();
   }
 
   if (themeToggle) {
     themeToggle.addEventListener('click', function () {
-      var next = currentTheme() === 'light' ? 'dark' : 'light';
+      var next = effectiveTheme() === 'light' ? 'dark' : 'light';
       try { localStorage.setItem('theme', next); } catch (e) {}
       applyTheme(next);
     });
+
+    // Apply the stored choice, or fall back to the OS preference.
     applyTheme(storedTheme);
+
+    // Keep the label in sync if the OS theme changes and no choice is stored.
+    if (mql && mql.addEventListener) {
+      mql.addEventListener('change', function () {
+        var hasChoice = null;
+        try { hasChoice = localStorage.getItem('theme'); } catch (e) {}
+        if (hasChoice) return;
+        applyTheme(null);
+      });
+    }
   }
 })();

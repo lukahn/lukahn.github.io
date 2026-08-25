@@ -3,9 +3,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
 <meta name="description" content="{{ site.description }}">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="color-scheme" content="dark light">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 
 <!-- Mastodon verification -->
 <link rel="me" href="{{ site.mastodon_link }}">
+
+<!-- Preload the two critical fonts (used above the fold) -->
+<link rel="preload" href="{{ site.baseurl }}/fonts/googlefonts/montserrat/v31/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCtr6Hw5aXo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ site.baseurl }}/fonts/googlefonts/open-sans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2" as="font" type="font/woff2" crossorigin>
 
 <link rel="stylesheet" href="{{ site.baseurl }}/css/vendor.css">
 <link rel="stylesheet" type="text/css" media="all" href="{{ site.baseurl }}/css/style.css" />
@@ -17,16 +24,9 @@
 <link rel="apple-touch-icon" sizes="180x180" href="{{ site.baseurl }}/favicons/apple-touch-icon.png" />
 <link rel="manifest" href="{{ site.baseurl }}/favicons/site.webmanifest" />
 
-
-
 {% if page.content contains '$$' or page.content contains '<script type="math/tex' %}
 <!-- MathJax v4 for LaTeX -->
-<script>
-  window.MathJax = {
-    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
-    svg: { fontCache: 'global' }
-  };
-</script>
+<script src="{{ site.baseurl }}/js/mathjax-config.js" defer></script>
 <script type="text/javascript" src="{{ site.baseurl }}/js/mathjax/tex-svg.js" defer></script>
 {% endif %}
 

@@ -13,6 +13,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const CleanCSS = require('clean-css');
 
 const root = path.resolve(__dirname, '..');
 const cssDir = path.join(root, 'css');
@@ -46,5 +47,13 @@ const out = [
 ].join('\n');
 
 const outFile = path.join(cssDir, 'vendor.css');
-fs.writeFileSync(outFile, out);
-console.log(`Wrote ${path.relative(root, outFile)} (${out.length} chars)`);
+
+// Minify the bundle. The leading /*! banner and other /*! attribution
+// comments are preserved (CleanCSS treats them as "special" comments).
+const minified = new CleanCSS({ level: 2 }).minify(out);
+if (minified.errors.length) {
+  console.error(minified.errors);
+  process.exit(1);
+}
+fs.writeFileSync(outFile, minified.styles);
+console.log(`Wrote ${path.relative(root, outFile)} (${minified.styles.length} chars, minified from ${out.length})`);

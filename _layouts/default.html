@@ -16,7 +16,9 @@
       </div>
     </main>
 
-    {% include footer.html %}
+    {% assign page_has_code = false %}
+    {% if content contains '<pre' %}{% assign page_has_code = true %}{% endif %}
+    {% include footer.html has_code=page_has_code %}
 
     </body>
 </html>

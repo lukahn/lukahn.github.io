@@ -1195,6 +1195,13 @@ td{
 	.search-help { color: #454545 !important; }
 }
 
+/* Honour the OS light preference on first visit (no stored theme choice) */
+@media (prefers-color-scheme: light) {
+	:root:not([data-theme]) {
+		@include light-theme;
+	}
+}
+
 [data-theme="light"] {
 	@include light-theme;
 }

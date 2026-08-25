@@ -1,7 +1,7 @@
 # Site settings
 title: "Lukahn"
 email: contact@lukahn.com
-description: "A dark blog theme for Jekyll."
+description: "Security engineering write-ups, useful command references, and other technical notes."
 baseurl: ""
 url: "https://lukahn.com"
 title_description: "Hi, I'm a Security Engineer, and this blog will contain writeups of anything interesting I've been working on, as well as a code dump for useful commands."
@@ -22,8 +22,8 @@ instagram_username:
 reddit_username: 
 
 # Footer
-footer_left: "Made with <i class=\"fa-solid fa-heart\"></i> by <a href=\"https://twitter.com/lukahn\">Luke Wakefield</a>"
-footer_right: "&lt;/&gt; on <a href=\"https://github.com/lukahn\">Github</a> &nbsp;<i class=\"fa-brands fa-github-alt\"></i>"
+footer_left: "Made with <i class=\"fa-solid fa-heart\" aria-hidden=\"true\"></i> by <a href=\"https://twitter.com/lukahn\">Luke Wakefield</a>"
+footer_right: "&lt;/&gt; on <a href=\"https://github.com/lukahn\">Github</a> &nbsp;<i class=\"fa-brands fa-github-alt\" aria-hidden=\"true\"></i>"
 
 # Build settings
 markdown: kramdown
@@ -36,4 +36,4 @@ plugins:
   - jekyll-feed
 
 permalink: pretty
-exclude: [vendor, node_modules, scripts, package.json, package-lock.json]
+exclude: [vendor, node_modules, scripts, package.json, package-lock.json, "css/bootstrap.min.css", "css/fontawesome", "css/googlefonts"]

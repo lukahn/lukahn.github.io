@@ -8,6 +8,7 @@
     "bundle-vendor": "node scripts/bundle-vendor-css.js"
   },
   "devDependencies": {
+    "clean-css": "^5.3.3",
     "glob": "^13.0.6",
     "purgecss": "^8.0.0"
   }

@@ -15,8 +15,10 @@
   </div>
 </footer>
 
+{% if include.has_code %}
 <script src="{{ site.baseurl }}/js/highlight.min.js"></script>
-<script>window.hljs && (window.hljs.highlightAll ? window.hljs.highlightAll() : window.hljs.initHighlightingOnLoad());</script>
+<script src="{{ site.baseurl }}/js/highlight-init.js"></script>
+{% endif %}
 <script src="{{ site.baseurl }}/js/main.js"></script>
 
 

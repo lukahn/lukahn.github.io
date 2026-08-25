@@ -17,8 +17,8 @@ The site targets **WCAG 2.2 Level AA** conformance, with many Level AAA success 
 ## Measures taken
 
 - Semantic landmarks (`header`, `nav`, `main`, `footer`) and a skip-to-content link.
-- Keyboard-operable menu, search, and theme controls, with visible focus indicators.
-- Text contrast of at least 4.5:1 (7:1 across most content), plus a light/dark theme option.
+- Keyboard-operable menu, search, and theme controls, with visible focus indicators. The navigation menu traps focus so it can't escape behind the page.
+- Text contrast of at least 4.5:1 (7:1 across most content), plus a light/dark theme option that respects the operating system preference on first visit.
 - Descriptive link text, unique link names, and alternative text for images.
 - Resizable text and a layout that reflows on small screens.
 - Accessible names on all icon-only controls.
