@@ -22,9 +22,9 @@ $rss:            #eea33a;
 $darker:         #21211E;
 $dark:           #2D2D29;
 $medium:         #3B3B35;
-$light-medium:   #969696;
+$light-medium:   #A9A9A9;
 $dark-blue:      #215A6D;
-$light-blue:     #3CA2A2;
+$light-blue:     #5FBDBD;
 $green:          #92C7A3;
 $light:          #DFECE6;
 $white:          #FFFFFF;
@@ -62,7 +62,7 @@ a, a:active {
 }
 
 a:hover {
-	color: $dark-blue;
+	color: $light;
 	text-decoration: none;
 }
 
@@ -86,7 +86,7 @@ ul {
 		}
 
 		a:hover {
-			color: $dark-blue;
+			color: $light;
 			text-decoration: none;
 		}
 	}
@@ -563,7 +563,7 @@ body.menu-open #my-menu {
 		}
 
 		a:hover {
-			color: $light-blue;
+			color: $light;
 		}
 
 		h4 {
@@ -833,7 +833,7 @@ body.menu-open #my-menu {
 		}
 
 		a:hover {
-			color: $dark-blue;
+			color: $light-blue;
 		}
 	}
 
