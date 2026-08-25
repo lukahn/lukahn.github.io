@@ -22,7 +22,7 @@ video without audio. Below are some of the slightly more unusual tasks I've done
 recommended to use [**MKVToolNix**][MKVToolNix], and maybe [**this**][MKV guide] guide.
 
 <br>
-# Adding a subtitle to a video
+## Adding a subtitle to a video
 
 This guide was initially going to document how to force subtitles to be on/off by default, however, after testing 
 again, I'm not able to reproduce the problem. It could be an old setting with VLC, or it could be confusion with 
@@ -49,7 +49,7 @@ fmpeg -i video.mp4 -i subtitle.srt -c:v copy -c:a copy -c:s mov_text -metadata:s
 ```
 
 <br>
-# Using youtube-dl
+## Using youtube-dl
 
 One of the main ways that I like to save videos is by using youtube-dl. This has a few options for subtitles:
 ### List subtitles
@@ -126,7 +126,7 @@ Metadata:
 ```
 
 <br>
-# Extracting subtitles
+## Extracting subtitles
 The simplest way of extracting subtitles is to identify which stream they're in (using the code above). If it's text, 
 then you can extract the subtitles by running:
 ```

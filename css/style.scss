@@ -30,7 +30,7 @@ $white:          #FFFFFF;
 $dark-purple:    #300030;
 $medium-purple:  #480048;
 $regular-purple: #601848;
-$red:            #C04848;
+$red:            #E06060;
 $orange:         #F07241;
 
 /* Responsive sizes */
@@ -63,6 +63,11 @@ a, a:active {
 a:hover {
 	color: $light;
 	text-decoration: none;
+}
+
+:focus-visible {
+	outline: 2px solid $light-blue;
+	outline-offset: 2px;
 }
 
 ul {
@@ -122,6 +127,7 @@ ul {
 	line-height: 1em;
 	padding: 10px;
 	background-color: $dark;
+	border: 0;
 	z-index: 100;
 	@media (min-width: $screen-sm-min) {
 		top: 20px;
@@ -513,9 +519,15 @@ body.menu-open #my-menu {
 		-webkit-border-radius:15px;
 	}
 
-	#search-input:focus {
-		outline: none;
-  }
+	#search-input:focus-visible {
+		outline: 2px solid $dark-blue;
+		outline-offset: 1px;
+	}
+
+	#search-input::placeholder {
+		color: #5a5a5a;
+		opacity: 1;
+	}
 
 	.content-panel {
 		padding-left: 10px;
@@ -966,4 +978,47 @@ th{
 td{
     padding: 2px;
     border:1px solid $dark-blue;;
+}
+
+.visually-hidden {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.skip-link {
+	position: absolute;
+	top: 0;
+	left: -9999px;
+	z-index: 1000;
+	padding: 8px 16px;
+	background-color: $white;
+	color: $dark;
+	font-weight: 400;
+
+	&:focus {
+		left: 16px;
+		top: 16px;
+	}
+
+	&:hover {
+		color: $dark;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
 }

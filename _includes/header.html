@@ -4,12 +4,12 @@
     <button class="menu-close" type="button" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
 
     <ul class="pages">
-      <li><a href="{{ site.baseurl }}/"><i class="fa-solid fa-house"></i> Home</a></li>
-      <li><a href="{{ site.baseurl }}/posts/"><i class="fa-solid fa-box-archive"></i> All Posts</a></li>
-      <li><a href="{{ site.baseurl }}/search/"><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
+      <li><a href="{{ site.baseurl }}/" {% if page.url == '/' %}aria-current="page"{% endif %}><i class="fa-solid fa-house"></i> Home</a></li>
+      <li><a href="{{ site.baseurl }}/posts/" {% if page.url == '/posts/' or page.url == '/posts-by-categories/' %}aria-current="page"{% endif %}><i class="fa-solid fa-box-archive"></i> All Posts</a></li>
+      <li><a href="{{ site.baseurl }}/search/" {% if page.url == '/search/' %}aria-current="page"{% endif %}><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
     </ul>
 
     {% include social_links.html %}
   </div>
 </nav>
-<div class="menu-button" href="#menu"><i class="fa-solid fa-bars"></i></div>
+<button type="button" class="menu-button" aria-label="Open menu" aria-controls="my-menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>

@@ -9,32 +9,39 @@
 
   function openMenu() {
     document.body.classList.add('menu-open');
-    if (toggle) toggle.style.display = 'none';
+    if (toggle) {
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.style.display = 'none';
+    }
+    if (closeBtn) closeBtn.focus();
   }
 
-  function closeMenu() {
+  function closeMenu(returnFocus) {
     document.body.classList.remove('menu-open');
-    if (toggle) toggle.style.display = '';
+    if (toggle) {
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.style.display = '';
+      if (returnFocus) toggle.focus();
+    }
   }
 
   if (menu && toggle) {
-    toggle.addEventListener('click', function (e) {
-      e.preventDefault();
+    toggle.addEventListener('click', function () {
       if (document.body.classList.contains('menu-open')) {
-        closeMenu();
+        closeMenu(true);
       } else {
         openMenu();
       }
     });
 
-    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+    if (closeBtn) closeBtn.addEventListener('click', function () { closeMenu(true); });
 
     // Close when a menu link is chosen or Escape is pressed
     menu.addEventListener('click', function (e) {
-      if (e.target.closest('a')) closeMenu();
+      if (e.target.closest('a')) closeMenu(false);
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closeMenu();
+      if (e.key === 'Escape') closeMenu(true);
     });
   }
 
@@ -50,7 +57,7 @@
       a.style.fontSize = '';
       var size = parseFloat(getComputedStyle(a).fontSize) || 20;
       var width = li.clientWidth || li.parentNode.clientWidth || 0;
-      while (size > 10 && width > 0 && a.offsetWidth + small.offsetWidth >= width) {
+      while (size > 12 && width > 0 && a.offsetWidth + small.offsetWidth >= width) {
         size -= 0.5;
         a.style.fontSize = size + 'px';
       }
