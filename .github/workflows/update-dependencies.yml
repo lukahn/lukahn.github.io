@@ -1,0 +1,57 @@
+name: Update dependencies
+
+on:
+  schedule:
+    # Every Monday at 03:00 UTC
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update-dependencies
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Update vendored dependencies
+        run: python3 scripts/update_dependencies.py
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install CSS purge tooling
+        run: npm ci
+
+      - name: Subset CSS (purge unused rules)
+        run: npm run purge
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: 'chore: update vendored front-end dependencies'
+          title: 'chore: update vendored front-end dependencies'
+          branch: update/dependencies
+          delete-branch: true
+          body: |
+            Automated update of the locally-hosted third-party assets:
+            - Font Awesome 7
+            - highlight.js
+            - Simple Jekyll Search
+            - MathJax (v2, pinned)
+            - Bootstrap 3 (pinned)
+            - Google Fonts (Open Sans, Montserrat, Anonymous Pro — latin subset only)

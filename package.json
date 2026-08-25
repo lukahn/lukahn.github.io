@@ -1,0 +1,13 @@
+{
+  "name": "lukahn.com",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Build tooling for the lukahn.com Jekyll site (subsets Bootstrap and Font Awesome CSS to only the rules the site uses).",
+  "scripts": {
+    "purge": "node scripts/purge-css.js"
+  },
+  "devDependencies": {
+    "glob": "^13.0.6",
+    "purgecss": "^8.0.0"
+  }
+}

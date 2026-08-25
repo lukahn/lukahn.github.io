@@ -15,7 +15,7 @@ layout: default
     <div itemscope itemtype="http://schema.org/Article" class="col-md-12 article">
       {% if site.data.thumbnail[page.thumbnail] %}
       <div class="thumb">
-        <img itemprop="image" src="{{ site.data.thumbnail[page.thumbnail] }}" alt="Thumbnail: {{ page.thumbnail }}" />
+        <img itemprop="image" src="{{ site.data.thumbnail[page.thumbnail] }}" alt="Thumbnail: {{ page.thumbnail }}" loading="lazy" decoding="async" />
       </div>
       {% elsif page.thumbnail %}
       <div class="thumb">

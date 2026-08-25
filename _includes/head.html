@@ -5,14 +5,13 @@
 <meta name="description" content="{{ site.description }}">
 
 <!-- Mastodon verification -->
-<a rel="me" href="{{ site.mastodon_link }}"></a>
+<link rel="me" href="{{ site.mastodon_link }}">
 
 <link rel="stylesheet" href="{{ site.baseurl }}/css/bootstrap.min.css">
 <link rel="stylesheet" href="{{ site.baseurl }}/css/fontawesome/v7/fontawesome.min.css">
 <link rel="stylesheet" href="{{ site.baseurl }}/css/fontawesome/v7/brands.min.css">
 <link rel="stylesheet" href="{{ site.baseurl }}/css/fontawesome/v7/solid.min.css">
 <link rel="stylesheet" type="text/css" media="all" href="{{ site.baseurl }}/css/style.css" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ site.baseurl }}/css/jquery.mmenu.all.css" />
 <link rel="stylesheet" href="{{ site.baseurl }}/css/highlightjs.piperita.css">
 
 <!-- Favicons generated at https://realfavicongenerator.net/ -->
@@ -24,9 +23,9 @@
 
 
 
-{% if page.content contains '<script type="math/tex' %}
+{% if page.content contains '$$' or page.content contains '<script type="math/tex' %}
 <!-- MathJax for LaTeX -->
-<script type="text/javascript" src="{{ site.baseurl }}/js/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="{{ site.baseurl }}/js/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
 {% endif %}
 
 </head>

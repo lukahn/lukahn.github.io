@@ -34,14 +34,24 @@ from other places but the code is my own.
 The following tools and libraries are used in this theme
 
 ### JavaScript
- * [jQuery](http://jquery.com/)
- * [MMenu](http://mmenu.frebsite.nl/)
- * [HighlightJS](https://highlightjs.org/)
- * [Simple Jekyll Search](https://github.com/christian-fei/Simple-Jekyll-Search)
+ * [HighlightJS](https://highlightjs.org/) (only on pages with code blocks)
+ * [Simple Jekyll Search](https://github.com/christian-fei/Simple-Jekyll-Search) (search page only)
+ * [MathJax](https://www.mathjax.org/) (only on pages using LaTeX)
 
 ### CSS
  * [Bootstrap](http://getbootstrap.com/)
  * [Font Awesome](http://fortawesome.github.io/Font-Awesome/)
+
+## Dependency updates
+Third-party assets (Font Awesome, HighlightJS, Simple Jekyll Search, MathJax,
+Bootstrap and Google Fonts) are vendored locally so no external requests are
+made at page load. A GitHub Actions workflow (`.github/workflows/update-dependencies.yml`)
+runs weekly and opens a pull request whenever any of them can be updated. See
+`scripts/update_dependencies.py` for the download logic.
+
+The workflow also runs `npm run purge` (`scripts/purge-css.js`), which subsets
+Bootstrap and Font Awesome CSS down to only the rules the site actually uses
+(keeping the CSS files roughly 5–15 KB instead of 120+ KB).
 
 ### Other
  * [Real Favicon Generator](http://realfavicongenerator.net/)

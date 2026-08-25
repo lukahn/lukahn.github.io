@@ -22,7 +22,7 @@ instagram_username:
 reddit_username: 
 
 # Footer
-footer_left: "Made with <i class=\"fa fa-heart\"></i> by <a href=\"https://twitter.com/lukahn\">Luke Wakefield</a>"
+footer_left: "Made with <i class=\"fa-solid fa-heart\"></i> by <a href=\"https://twitter.com/lukahn\">Luke Wakefield</a>"
 footer_right: "&lt;/&gt; on <a href=\"https://github.com/lukahn\">Github</a> &nbsp;<i class=\"fa-brands fa-github-alt\"></i>"
 
 # Build settings
@@ -33,4 +33,4 @@ kramdown:
   syntax_highlighter: rouge
 
 permalink: pretty
-exclude: [vendor]
+exclude: [vendor, node_modules]
