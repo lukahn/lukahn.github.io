@@ -7,9 +7,11 @@
       <li><a href="{{ site.baseurl }}/" {% if page.url == '/' %}aria-current="page"{% endif %}><i class="fa-solid fa-house"></i> Home</a></li>
       <li><a href="{{ site.baseurl }}/posts/" {% if page.url == '/posts/' or page.url == '/posts-by-categories/' %}aria-current="page"{% endif %}><i class="fa-solid fa-box-archive"></i> All Posts</a></li>
       <li><a href="{{ site.baseurl }}/search/" {% if page.url == '/search/' %}aria-current="page"{% endif %}><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
+      <li><a href="{{ site.baseurl }}/glossary/" {% if page.url == '/glossary/' %}aria-current="page"{% endif %}><i class="fa-solid fa-book"></i> Glossary</a></li>
     </ul>
 
     {% include social_links.html %}
   </div>
 </nav>
 <button type="button" class="menu-button" aria-label="Open menu" aria-controls="my-menu" aria-expanded="false"><i class="fa-solid fa-bars"></i> Menu</button>
+<button type="button" class="theme-toggle" aria-pressed="false">Light mode</button>

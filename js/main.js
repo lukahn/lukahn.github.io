@@ -68,4 +68,36 @@
     fitTitles();
     window.addEventListener('resize', fitTitles);
   }
+
+  // Theme toggle (light/dark) — user-selectable colours
+  var themeToggle = document.querySelector('.theme-toggle');
+  var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  var storedTheme = null;
+  try { storedTheme = localStorage.getItem('theme'); } catch (e) {}
+
+  function currentTheme() {
+    return document.documentElement.getAttribute('data-theme') || (prefersLight ? 'light' : 'dark');
+  }
+
+  function applyTheme(theme) {
+    if (theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    if (themeToggle) {
+      var isLight = currentTheme() === 'light';
+      themeToggle.textContent = isLight ? 'Dark mode' : 'Light mode';
+      themeToggle.setAttribute('aria-pressed', String(isLight));
+    }
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function () {
+      var next = currentTheme() === 'light' ? 'dark' : 'light';
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      applyTheme(next);
+    });
+    applyTheme(storedTheme);
+  }
 })();

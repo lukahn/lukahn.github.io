@@ -3,14 +3,16 @@
  *
  * Run with:  npm run purge
  *
- * Output is written back over the vendored files in css/. The full files are
- * re-downloaded by scripts/update_dependencies.py (GitHub Actions) before this
- * step runs, so every update stays as small as possible.
+ * Before subsetting, the full vendor CSS is re-downloaded from jsDelivr (see
+ * scripts/fetch-vendor-css.js), so this script is repeatable regardless of the
+ * current state of the files in css/ (the purge is destructive, so purging an
+ * already-purged file would otherwise lose rules that aren't in the safelist).
  */
 const { PurgeCSS } = require('purgecss');
 const { globSync } = require('glob');
 const fs = require('fs');
 const path = require('path');
+const { fetchVendorCss } = require('./fetch-vendor-css');
 
 const root = path.resolve(__dirname, '..');
 
@@ -57,7 +59,7 @@ const FA_ICONS = [
   'fa-linkedin', 'fa-stack-overflow', 'fa-facebook', 'fa-instagram',
   'fa-reddit-alien', 'fa-rss',
   'fa-house', 'fa-box-archive', 'fa-magnifying-glass', 'fa-bars', 'fa-xmark',
-  'fa-heart', 'fa-tags',
+  'fa-heart', 'fa-tags', 'fa-book',
 ];
 
 const safelist = {
@@ -96,6 +98,8 @@ async function purgeFiles(cssFiles, outFiles) {
 }
 
 (async () => {
+  await fetchVendorCss();
+
   await purgeFiles(
     ['css/bootstrap.min.css'],
     ['css/bootstrap.min.css'],
