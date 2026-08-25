@@ -29,7 +29,7 @@ permalink: /404.html
   <div class="content-panel related">
     {% for post in site.posts limit:1 %}
       <div class="related-header">
-        <a href="{{ site.baseurl }}{{ post.url }}">Suggested Article</a>
+        <a href="{{ site.baseurl }}{{ post.url }}" aria-label="Suggested Article: {{ post.title }}">Suggested Article</a>
       </div>
       <div class="title">
         <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
@@ -40,7 +40,7 @@ permalink: /404.html
          {% else %}
           {{ post.excerpt | strip_html | truncatewords:30 }}
          {% endif %}
-        <a href="{{ site.baseurl }}{{ post.url }}">Continue Reading</a>
+        <a href="{{ site.baseurl }}{{ post.url }}" aria-label="Continue Reading: {{ post.title }}">Continue Reading</a>
       </div>
     {% endfor %}
   </div>
