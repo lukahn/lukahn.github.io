@@ -36,4 +36,5 @@ plugins:
   - jekyll-feed
 
 permalink: pretty
+include: [".well-known"]
 exclude: [vendor, node_modules, scripts, package.json, package-lock.json, "css/bootstrap.min.css", "css/fontawesome", "css/googlefonts"]

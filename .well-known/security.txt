@@ -1,0 +1,5 @@
+# Security contact information for lukahn.com
+Contact: mailto:security@lukahn.com
+Expires: 2027-08-26T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://lukahn.com/.well-known/security.txt

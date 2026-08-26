@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
 """Update vendored front-end dependencies in this Jekyll site.
 
-Downloads the latest versions of the third-party assets that are served
-locally (rather than from a CDN) and rewrites them in place. Intended to be
-run from GitHub Actions on a schedule; a companion workflow turns any changes
-into a pull request.
+Downloads pinned versions of the third-party assets that are served locally
+(rather than from a CDN) and rewrites them in place. Every download's SHA-256
+hash is verified against the value recorded in ASSETS, so an upstream change
+can never slip in silently: to update a dependency, bump its pinned version
+and refresh the recorded hash after review.
+
+Intended to be run from GitHub Actions on a schedule; a companion workflow
+turns any changes into a pull request.
 
 Usage:
     python3 scripts/update_dependencies.py
 """
 
+import hashlib
 import re
 import sys
 import urllib.request
@@ -47,26 +52,42 @@ def write_if_changed(path: Path, data: bytes) -> bool:
 # --------------------------------------------------------------------------- #
 
 ASSETS = [
-    # (remote path on jsDelivr, local destination)
+    # (remote path on jsDelivr, local destination, expected sha256)
+    # Versions are pinned and each download is verified against its hash in
+    # update_static_assets(), so a change upstream is always caught.
     # CSS is fetched by scripts/fetch-vendor-css.js (run via `npm run purge`),
     # which is the single source of truth for Bootstrap/Font Awesome CSS URLs.
-    ("@fortawesome/fontawesome-free@7/webfonts/fa-solid-900.woff2",
-     "fonts/fontawesome/v7/fa-solid-900.woff2"),
-    ("@fortawesome/fontawesome-free@7/webfonts/fa-brands-400.woff2",
-     "fonts/fontawesome/v7/fa-brands-400.woff2"),
-    ("@highlightjs/cdn-assets@11/highlight.min.js",
-     "js/highlight.min.js"),
-    ("simple-jekyll-search@1/dest/simple-jekyll-search.min.js",
-     "js/jekyll-search.js"),
-    ("mathjax@4/tex-svg.js",
-     "js/mathjax/tex-svg.js"),
+    ("@fortawesome/fontawesome-free@7.3.1/webfonts/fa-solid-900.woff2",
+     "fonts/fontawesome/v7/fa-solid-900.woff2",
+     "24e5fae26b41c08b2df81c91669f5aaae71d81a84a4713fc56b5c621b78dd456"),
+    ("@fortawesome/fontawesome-free@7.3.1/webfonts/fa-brands-400.woff2",
+     "fonts/fontawesome/v7/fa-brands-400.woff2",
+     "ff66d1cfb67dbe3da432bbe36572cabfa4eef0e591303c2cba111474ba1d15bc"),
+    ("@highlightjs/cdn-assets@11.12.0/highlight.min.js",
+     "js/highlight.min.js",
+     "8ab71eb09c51f501e5e25157d9cff100e46cc29bcbfc744d0b746d451fca7f53"),
+    ("simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js",
+     "js/jekyll-search.js",
+     "89e51cb40aef5dad896b0c3bbbe3b28eacc1a4e5b4e04f4ad7b0733fcaabc553"),
+    ("mathjax@4.1.3/tex-svg.js",
+     "js/mathjax/tex-svg.js",
+     "23c036deccc0f2374834a47e4032e452419f3ac027bf17e17c104e2746b19f4c"),
 ]
 
 
 def update_static_assets() -> bool:
     changed = False
-    for remote, local in ASSETS:
+    for remote, local, expected_sha256 in ASSETS:
         data = fetch(f"{JS_DELIVR}/{remote}")
+        actual = hashlib.sha256(data).hexdigest()
+        if actual != expected_sha256:
+            raise RuntimeError(
+                f"Checksum mismatch for {remote}:\n"
+                f"  expected {expected_sha256}\n"
+                f"  got      {actual}\n"
+                "Update the pinned version and recorded hash in ASSETS, "
+                "then re-run."
+            )
         if write_if_changed(ROOT / local, data):
             print(f"  updated  {local}")
             changed = True

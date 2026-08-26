@@ -4,7 +4,7 @@ https://keybase.io/lukahn
 
 I hereby claim:
 
-  * I am an admin of http://lukahn.com
+  * I am an admin of https://lukahn.com
   * I am lukahn (https://keybase.io/lukahn) on keybase.
   * I have a public key ASDXUg7aWURoPqvIHBJcycLQSeHoxGV06MdYif5ROffBjgo
 
