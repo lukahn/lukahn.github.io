@@ -106,12 +106,13 @@ ul {
 .header {
 	font-size: 32px;
 	text-align: center;
-	margin-top: 20px;
+	margin-top: 60px;
 	margin-left: -0%;
 	width: 100%;
 
 	@media (min-width: $screen-sm-min) {
 		font-size: 62px;
+		margin-top: 70px;
 		margin-left: -10%;
 		width: 120%;
 	}
@@ -770,7 +771,7 @@ body.menu-open #my-menu {
 
 				pre {
 					width: 100%;
-					font-family: 'Anonymous Pro';
+					font-family: 'Anonymous Pro', monospace;
 					background-color: $darker;
 					color: $white;
 					font-size: 12px;
@@ -796,8 +797,9 @@ body.menu-open #my-menu {
 			p, ul, ol {
 
 				code {
-					font-family: 'Anonymous Pro';
+					font-family: 'Anonymous Pro', monospace;
 					font-size: 15px;
+					font-weight: 400;
 					background-color: $darker;
 					color: $white;
 					padding: 0.5em;
@@ -936,10 +938,9 @@ body.menu-open #my-menu {
 	margin-left: auto;
 	margin-right: auto;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
-	justify-content: space-between;
-	flex-wrap: wrap;
-	gap: 12px;
+	justify-content: center;
 
 	.fa-heart {
 		color: $red;
@@ -950,10 +951,6 @@ body.menu-open #my-menu {
 		text-align: center;
 		margin-top: 20px;
 		margin-bottom: 20px;
-	}
-
-	.footer-item {
-		flex: 1 1 200px;
 	}
 
 	.footer-badge {
@@ -1119,7 +1116,6 @@ td{
 
 /* Accessibility statement link in the footer */
 .footer-accessibility {
-	flex: 1 1 100%;
 	font-size: 14px;
 }
 

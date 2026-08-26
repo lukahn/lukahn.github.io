@@ -16,7 +16,7 @@ tags:
  - Amazon
 ---
 
-I'm a big fan of subtitles, and find that it's useful in making sure that I don't miss any dialog, or so I can watch a 
+I'm a big fan of subtitles, and find that it's useful in making sure that I don't miss any dialogue, or so I can watch a 
 video without audio. Below are some of the slightly more unusual tasks I've done when working with subtitles. 
 **NOTE:** This is for `.MP4` files. It may work with other formats, but I've not tested it. For `.MKV` files, it's 
 recommended to use [**MKVToolNix**][MKVToolNix], and maybe [**this**][MKV guide] guide.
@@ -24,7 +24,7 @@ recommended to use [**MKVToolNix**][MKVToolNix], and maybe [**this**][MKV guide]
 <br>
 ## Adding a subtitle to a video
 
-This guide was initially going to document how to force subtitles to be on/off by default, however, after testing 
+This guide was initially going to document how to force subtitles to be on/off by default; however, after testing 
 again, I'm not able to reproduce the problem. It could be an old setting with VLC, or it could be confusion with 
 the `.MKV` format (which does seem to play subtitles by default). Either way, here are the ways of manually adding 
 a simple subtitle file (SubRip/srt) to an mp4 video.
@@ -74,7 +74,7 @@ youtube-dl --write-auto-sub --embed-subs URL
 youtube-dl --write-sub --sub-lang LANGS URL
 ```
 ### Downloading the subtitles in different formats.
-e.g., BBC iPlayer only uses ttml, which ffmpeg can't read. Options are srt, ass, vtt, or lrc.
+e.g., British Broadcasting Corporation (BBC) iPlayer only uses Timed Text Markup Language (TTML), which ffmpeg can't read. Options are srt, ass, vtt, or lrc.
 ```
 youtube-dl --convert-subtitles srt --embed-subs URL
 ```
@@ -89,7 +89,7 @@ The complete list of commands can be found on their [**README**][youtube-dl] pag
 <br>
 ## Netflix and Amazon Prime Video
 When downloading from Netflix or Amazon Prime Video, the best tool I've come across is [**AnyStream**][AnyStream]. 
-This is made by RedFox - the same people that make [**CloneCD**][CloneCD] and [**CloneDVD**][CloneDVD] (in case you've 
+This is made by RedFox - the same people who make [**CloneCD**][CloneCD] and [**CloneDVD**][CloneDVD] (in case you've 
 come across these in the past). The trial period is very generous too:
 
 > <font size="5"> <b>
@@ -97,9 +97,7 @@ The free 21-day trial version of AnyStream is limited to approximately 10 downlo
 have a quota of 10 downloads. Whenever some of it is used up, it will refill at a rate of 1 download every day. This 
 amounts to a maximum of 31 downloads over the trial period of 21 days.</font>
 
-The best VPN I've found that actually works with these services to get content from other countries 
-is [**ExpressVPN**][ExpressVPN]. This has a 30 day moneyback guarantee in case you're not able to stream from another 
-location, which you can initiate by contacting their helpful support staff.
+<del>The best Virtual Private Network (VPN) I've found that actually works with these services to get content from other countries is [**ExpressVPN**][ExpressVPN]. This has a 30-day money-back guarantee in case you're not able to stream from another location, which you can initiate by contacting their helpful support staff.</del> *(No longer recommended — see [Edward Snowden's tweet](https://twitter.com/Snowden/status/1438291654239215619) on ExpressVPN.)*
 
 AnyStream can be used to download subtitles too. 
 If the subtitles are in a different language character set (e.g., Japanese), then the subtitles will be in a format 
@@ -138,14 +136,13 @@ examples.
 The subtitles may also be in different formats, especially those in Japanese/Chinese. See [**this**][netflix chinese] 
 page for more.
 
-If they're in the dvd_stream format (VobSub). then we'll need to use different software to extract them. The best 
+If they're in the dvd_stream format (VobSub), then we'll need to use different software to extract them. The best 
 option I've found is using [**YAMB**][YAMB] and [**this guide**][subtitle guide].
 
-Then to convert these from VobSub to Srt, you'll want a tool called [**Subtitle Edit**][subtitle edit], which does OCR 
-recognition. For non-Latin, select the **Tesseract 5.00 Alpha** OCR method.
+Then to convert these from VobSub to Srt, you'll want a tool called [**Subtitle Edit**][subtitle edit], which does Optical Character Recognition (OCR). For non-Latin, select the **Tesseract 5.00 Alpha** OCR method.
 
-Then you can run this new srt file though a translation program. Results will vary greatly, and getting subtitles 
-elsewhere is by far the better option, but for obscure shows that are only in a foreign language, then 
+Then you can run this new srt file through a translation program. Results will vary greatly, and getting subtitles 
+elsewhere is by far the better option, but for obscure shows that are only in a foreign language, 
 this may be your best bet.
 
 [MKVToolNix]: https://mkvtoolnix.download/
