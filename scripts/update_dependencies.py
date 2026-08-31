@@ -132,13 +132,17 @@ def update_fonts() -> bool:
     for family, css_name, directory, params in FONTS:
         css = fetch(f"{GF_CSS}?family={params}&display=swap").decode("utf-8")
 
-        latin = None
+        # Google returns the subset comment once per requested weight/style,
+        # so there can be several "latin" blocks. Collect them all rather than
+        # letting the last one overwrite the rest.
+        latin_blocks = []
         for name, block in split_blocks(css):
             if name == "latin":
-                latin = block
-        if latin is None:
+                latin_blocks.append(block)
+        if not latin_blocks:
             print(f"  ! no latin subset returned for {family}; skipping")
             continue
+        latin = "\n".join(latin_blocks)
 
         rewritten = []
         for line in latin.splitlines():
