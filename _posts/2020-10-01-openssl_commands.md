@@ -3,6 +3,7 @@ layout:     post
 title:      Handy OpenSSL commands
 date:       2020-10-01 13:15:00
 author:     Luke Wakefield
+human_written: true
 summary:    A compilation of useful OpenSSL and keytool commands for working with SSL certificates and keys.
 categories: openssl
 thumbnail: heart

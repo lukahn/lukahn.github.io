@@ -1166,6 +1166,20 @@ td{
 	color: $light-medium;
 }
 
+/* AI disclosure box — transparency note on AI-written pages */
+.ai-disclaimer {
+	background-color: $darker;
+	border-left: 4px solid $light-blue;
+	color: $light-medium;
+	padding: 12px 18px;
+	margin: 0 0 30px 0;
+	font-size: 0.9em;
+
+	p {
+		margin: 0;
+	}
+}
+
 /* Light theme — enables user-selected foreground/background colours (1.4.8) */
 @mixin light-theme {
 	body { background-color: #f5f5f5 !important; color: #1a1a1a !important; }
@@ -1191,6 +1205,7 @@ td{
 	.breadcrumb li + li::before { color: #454545 !important; }
 	#search-container label { color: #1a1a1a !important; }
 	.search-help { color: #454545 !important; }
+	.ai-disclaimer { background-color: #e8e8e8 !important; color: #454545 !important; border-left-color: #0a5c5c !important; }
 }
 
 /* Honour the OS light preference on first visit (no stored theme choice) */

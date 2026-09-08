@@ -6,6 +6,9 @@ layout: default
   <div class="row index all-posts">
     <h1 class="header" itemprop="headline">{{ page.title }}</h1>
     <div class="col-md-12 content-panel prose">
+       {% unless page.human_written %}
+         {% include ai_disclaimer.html %}
+       {% endunless %}
        {{ content }}
     </div>
   </div>

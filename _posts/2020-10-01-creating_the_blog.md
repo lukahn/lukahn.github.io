@@ -3,6 +3,7 @@ layout:     post
 title:      Creating the blog
 date:       2020-10-01 12:30:00
 author:     Luke Wakefield
+human_written: true
 summary:    The steps I took to create the blog.
 categories: website
 thumbnail: heart

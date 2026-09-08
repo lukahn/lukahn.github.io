@@ -3,6 +3,7 @@ layout:     post
 title:      Working with subtitles
 date:       2021-06-20 12:30:00
 author:     Luke Wakefield
+human_written: true
 summary:    A list of tasks for managing subtitles in video files.
 categories: website
 thumbnail: heart

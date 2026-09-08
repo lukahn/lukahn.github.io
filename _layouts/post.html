@@ -62,6 +62,10 @@ layout: default
 
       <div class="content-panel content">
 
+        {% unless page.human_written %}
+          {% include ai_disclaimer.html %}
+        {% endunless %}
+
         {% if page.series %}
           This post is part of the series '{{ page.series }}':
           <ol class="series">
