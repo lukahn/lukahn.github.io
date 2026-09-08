@@ -461,10 +461,12 @@ body.menu-open #my-menu {
 		a, a:active {
 			color: $white;
 			white-space: nowrap;
+			text-decoration: underline;
 		}
 
 		a:hover {
 			color: $light-blue;
+			text-decoration: underline;
 		}
 	}
 
@@ -1175,8 +1177,8 @@ td{
 	#my-menu a, #my-menu a:active, #my-menu p { color: #1a1a1a !important; }
 	#my-menu a:hover, .menu-close, .menu-close:hover { color: #0a5c5c !important; }
 	.index .author-header, .articles h2 { color: #0a5c5c !important; }
-	.articles a, .articles a:active { color: #1a1a1a !important; }
-	.articles a:hover { color: #0a5c5c !important; }
+	.articles a, .articles a:active { color: #1a1a1a !important; text-decoration: underline !important; }
+	.articles a:hover { color: #0a5c5c !important; text-decoration: underline !important; }
 	.articles small { color: #454545 !important; }
 	.links a { color: #1a1a1a !important; }
 	.related-header a { color: #1a1a1a !important; background-color: #e8e8e8 !important; }
