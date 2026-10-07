@@ -67,6 +67,197 @@ A worked example of this whole pipeline is the `passkey-reflect` repo: its
   annually.
 - **Domain hygiene.** CAA record pinning which CAs may issue, DNSSEC, and
   SPF/DKIM/DMARC on the mail domain.
+- **Bound the resources a request can consume.** Cap the body size, the header
+  size, the number of fields, and the time a handler may take. A parser fed
+  unbounded input is a denial-of-service waiting to happen, and attacker-controlled
+  CBOR, XML, JSON or DER is where it bites.
+
+### Cryptography
+
+Do not invent any of this. Use a maintained library — libsodium, or the platform
+API (WebCrypto, `cryptography`, Go's `crypto/*`) — and follow its documented
+patterns.
+
+- **Use an AEAD** (AES-GCM, ChaCha20-Poly1305, XChaCha20) rather than pairing a
+  cipher with a separate MAC by hand. Getting encrypt-then-MAC right is not
+  obvious, and getting it wrong is silent.
+- **Never reuse a nonce** with the same key. Random 96-bit nonces are fine for
+  GCM at sane volumes; otherwise use a counter.
+- **Derive keys** from a secret with HKDF or a documented KDF, and give each
+  purpose its own key or its own label. Never use one key for two jobs.
+- **Compare secrets in constant time** (`hmac.compare_digest`, `crypto.timingSafeEqual`).
+  `==` leaks length and content through timing.
+- **Use a CSPRNG** for every token, nonce, salt and identifier. Never `random`,
+  never a timestamp, never a counter alone.
+- **Authenticate before you parse.** Decrypt and verify, then decode. Never act
+  on unverified input, and never reveal *why* verification failed — one generic
+  error for tampered, expired and malformed alike.
+- **Hash passwords with Argon2id** (or scrypt/bcrypt), never SHA-256 alone. If
+  you can use passkeys instead, do.
+- **Plan for rotation** from the first commit: a key or secret that cannot be
+  changed without downtime will not be changed.
+
+### Input validation: the failure modes
+
+"Validate all input" is not actionable on its own. These are the specific
+mistakes to check for, in rough order of how often they appear:
+
+| Failure | What to do |
+|---|---|
+| **Injection** (SQL, shell, LDAP, NoSQL, template) | Parameterise, never concatenate. If a library must build a string, that is a finding |
+| **Path traversal** | Resolve the path, confirm it is inside the intended root, then use the resolved path. Reject `..`, absolute paths, and symlinks out of bounds |
+| **SSRF** | Do not accept URLs. If unavoidable, allowlist hosts and schemes, resolve, reject private/loopback/link-local/reserved/metadata ranges, connect to the validated IP |
+| **XXE** | Disable external entities and DTDs in every XML parser. Better: do not parse XML |
+| **Insecure deserialisation** | Never unpickle, never `eval`, never `yaml.load` without `SafeLoader`. Prefer JSON with a schema |
+| **Mass assignment** | Bind named fields explicitly. Never merge a request body into a model wholesale |
+| **Open redirect** | Never redirect to a user-supplied absolute URL. Allowlist, or map to a server-side table of destinations |
+| **File upload** | Validate content (not just the extension), cap the size, store outside the web root, strip executable permissions, serve with `Content-Disposition: attachment` and a `nosniff` header, and generate the filename yourself |
+| **Header injection** | Strip CR/LF from anything echoed into a header |
+| **Integer and length handling** | Check for overflow, negative lengths, and lengths that exceed the buffer before allocating |
+| **Deep nesting** | Cap recursion and nesting depth in JSON, CBOR, DER and template input |
+
+Validate on the **server**, even when the client already did. Reject by default:
+an allowlist of what is permitted, not a denylist of what is not.
+
+### Secrets
+
+- **Never** in source, git history, an image layer, a log line, a URL, or an
+  error message.
+- **One secret per environment.** Do not reuse a production secret in staging —
+  that turns a staging compromise into a production one.
+- **Keep them out of the build.** Pass secrets at runtime from a secret store,
+  never as build arguments, because build arguments end up in image metadata.
+- **Guard the repository**: secret scanning in CI *and* push protection, plus a
+  pre-commit hook so the secret never reaches the remote at all. If one does get
+  committed, rotate it — rewriting history is not enough, because the value has
+  already been exposed.
+- **Rotate on a schedule and on suspicion**, and make sure the old value stops
+  working.
+- **Scan the history**, not just the working tree. A secret deleted last month is
+  still in the clone everyone has.
+
+### Error handling and information disclosure
+
+- **One generic error for the user**, full detail in the server log. Never a
+  stack trace, framework debug page, SQL fragment, or file path in a response.
+- **Do not distinguish states you do not have to.** "No such user" and "wrong
+  password" should be one indistinguishable response, with comparable timing.
+  The same goes for tampered vs expired tokens, and for "exists but not yours"
+  versus "does not exist".
+- **No version banners.** Remove `Server`, `X-Powered-By` and framework
+  signatures, and do not let error pages identify the stack.
+- **Disable debug mode in production**, and fail closed if it is somehow
+  enabled — do not merely log a warning.
+- **Return the right status code.** A `404` for something that exists but is not
+  yours; a `415` for the wrong content type; a `405` for the wrong method.
+
+### Supply chain
+
+- **Lockfiles committed**, with integrity hashes, and installs that use them
+  (`npm ci`, `--frozen-lockfile`, `--require-hashes`).
+- **Every CI action pinned to a full commit SHA**, with the version in a comment,
+  and `permissions: contents: read` unless a job needs more.
+- **Beware typosquatting and dependency confusion**: check the exact package name
+  character by character, prefer well-established packages, and be suspicious of
+  a dependency that was published days ago.
+- **Produce an SBOM** (syft, or `buildx --sbom`) and record the image digest.
+  Pinning by digest is what makes a redeploy reproducible.
+- **Consider provenance and signing** (SLSA, cosign, GitHub attestations) once a
+  project is worth the operational cost. For a small site, the digest plus a
+  locked build is proportionate.
+- **Treat the build as untrusted input.** A pull request from a fork must not be
+  able to read secrets — do not run `pull_request_target` with a checkout of the
+  fork's code.
+
+### Privacy when you cannot avoid collecting data
+
+Rule 1 is "collect nothing", but sometimes a feature genuinely needs data. When it
+does:
+
+- **Write down what, why, how long, and who can see it** — before writing the
+  code. A data inventory of one table is still a data inventory.
+- **Minimise**: no field you do not use, no identifier when a counter will do, no
+  exact value when a range will do.
+- **Set a retention period** and enforce it with something that runs, not with
+  good intentions.
+- **Encrypt at rest** and in transit, and keep the keys separate from the data.
+- **Never put personal data in a URL**, a query string, a referrer header, an
+  analytics event, or a log. URLs leak into histories, proxies and shared
+  screenshots.
+- **Give a way to delete it**, and make sure deleting it actually deletes it —
+  including from backups and any derived store.
+- **Distinguish processing from storing**: an in-memory value that dies with the
+  process is a far smaller liability than a row. Prefer it.
+
+### Incident response
+
+Decide this before you need it:
+
+1. **Detect.** Know what tells you something is wrong — error-rate alerts, a
+   Cockpit query, a Cloudflare spike. A site nobody watches has no detection.
+2. **Contain.** Rotate the exposed secret or key first, because that stops the
+   bleeding whatever the entry was. Then restrict access.
+3. **Evict.** Redeploy a known-good image **by digest**. This is where pinning
+   by digest pays off: you can name exactly what was running and exactly what
+   you are returning to.
+4. **Restore.** Bring the service back, and verify with a real end-to-end test
+   rather than an assumption.
+5. **Learn.** Write down the timeline, the root cause, and the specific change
+   that prevents a repeat. A stateless design is a genuine advantage here: there
+   is nothing to clean, because there is no stored state to have been altered.
+
+Keep a **vulnerability disclosure route** (`security.txt`) and a way to be
+contacted. If a researcher finds something, you want them to tell you rather than
+publish it.
+
+### How to actually apply ATT&CK and D3FEND
+
+The tables below are the destination. This is the route, and it is the part that
+is usually skipped:
+
+1. **Inventory what you actually run** — the languages, frameworks, the origin
+   platform, the CDN, the CI provider, and every place a secret lives. You cannot
+   map threats to a system you have not described.
+2. **Walk the ATT&CK techniques for enterprise**, plus web-applicable ones from
+   the mobile and cloud matrices, and for each ask: *does this apply to me, and
+   if it happened, what would I see?* Discard the ones that do not apply —
+   writing "N/A" is a result.
+3. **Record the answer in three columns**: applicable technique → control in this
+   repo (with the file) → detection, or "no detection". **No detection is the
+   important column.** Most small sites have no telemetry for most techniques,
+   and pretending otherwise is how a mapping becomes fiction.
+4. **Map each remaining technique to a D3FEND countermeasure**, using the D3FEND
+   tactic it belongs to:
+   - **Model** — threat modelling, inventory, asset description.
+   - **Harden** — patching, configuration, hardening, access control, credential
+     hygiene. For a small site this is where nearly all the real work is.
+   - **Detect** — logging, monitoring, anomaly detection. Usually thin, and worth
+     saying so.
+   - **Isolate** — sandboxing, read-only filesystems, dropped capabilities,
+     network egress restriction, execution isolation.
+   - **Deceive** — decoys and honeytokens. Rarely proportionate; almost always
+     out of scope for a small site.
+   - **Evict** — reimaging, credential rotation, process termination.
+   - **Restore** — reimaging from a known-good image, backup restore.
+   D3FEND countermeasure identifiers change between framework versions, so look
+   the current ID up at d3fend.mitre.org rather than copying one from memory.
+5. **Report the honest summary**: which techniques are hardened, which are only
+   detected, and which are accepted risks with a reason. Then revisit it when the
+   architecture changes — the mapping is a snapshot, not a certificate.
+
+A worked example of the three-column output is in the `passkey-reflect` repo's
+README. Note what it says about telemetry: the site hardens well and detects
+almost nothing, and the mapping records that rather than hiding it.
+
+### What not to claim
+
+- **ATT&CK is not a checklist you pass.** It describes adversary behaviour. There
+  is no "ATT&CK compliant". Mapping it produces a threat model, not a certificate.
+- **A clean scanner run is not a clean bill of health.** Report what each tool
+  did *not* look at. A bandit pass says nothing about your base image.
+- **Do not overstate coverage** in the README. If the docs claim a property the
+  code does not deliver, that is itself a finding — and it is worse than the gap,
+  because it stops anyone looking.
 
 ## Frameworks to check against
 
@@ -391,6 +582,45 @@ with teal-blue and sage accents.
 Deep purples (`$dark-purple #300030`, `$medium-purple #480048`,
 `$regular-purple #601848`) exist for large blocks only.
 
+The **light** theme, from the `light-theme` mixin in the same file. A toggle is
+expected on every site (see *Standard controls*):
+
+| Role | Hex |
+|---|---|
+| Page background | `#f5f5f5` |
+| Panels | `#ffffff` |
+| Inputs, code | `#e8e8e8` |
+| Body text | `#1a1a1a` |
+| Muted text | `#454545` |
+| Accent | `#2f6b46` |
+| Links, focus ring | `#0a5c5c` |
+| Warning | `#b5471f` |
+| Danger | `#b3261e` |
+
+**Tones you will have to derive.** Neither palette defines borders, faint text, or
+a red or orange light enough to read on a dark background. These values are
+already solved — reuse them rather than re-deriving something subtly different:
+
+| Token | Dark | Light |
+|---|---|---|
+| `--border` | `#4a4a43` | `#d5d5d0` |
+| `--border-strong` | `#8a8a80` | `#72726b` |
+| `--border-faint` | `rgba(74,74,67,0.6)` | `rgba(0,0,0,0.09)` |
+| `--text-faint` | `#adada6` | `#5c5c56` |
+| `--accent-dim` | `#679878` | `#4f7d5f` |
+| `--accent-hover` | `#a6d3b3` | `#26583a` |
+| `--warn-text` | `#f5a37e` | `#a03f1a` |
+| `--error-text` | `#ffb4b4` | `#a3231b` |
+| `--on-accent` | `#21211e` | `#ffffff` |
+| `--masthead-top` | `#215a6d` | `#cfe3e0` |
+| `--code-text` | `#dfece6` | `#1f2a26` |
+
+The warning and danger text steps are not cosmetic. `$red` measures 3.96:1 as text
+on the dark background and 3.72:1 on its own tint; `$orange` 4.44:1 on its tint.
+Both fail AA, so the lighter steps are required. Likewise the light
+`--border-strong`: the obvious mid-grey is 2.66:1 against a light input fill and
+2.44:1 against the masthead teal, both under the 3:1 that 1.4.11 wants.
+
 Rules:
 
 - **Reuse these hexes.** Introduce a new colour only when the palette genuinely
@@ -400,11 +630,81 @@ Rules:
   they read well on `$dark` and `$darker`, and fail contrast on `$white`.
   `$dark-blue` is a surface, not body text on a dark background.
 - **Carry the focus style over:** `:focus-visible { outline: 2px solid
-  #9FDCDC; outline-offset: 2px; }`.
+  var(--info); outline-offset: 2px; }` — `#9FDCDC` on dark, `#0a5c5c` on light.
 - **Typography:** Open Sans (self-hosted) for body text, and a monospace stack
   for code. Do not add a third family.
 - **Rhythm:** keep the spacing scale, corner radius, and header/footer structure
   recognisably the same across sites, so lukahn.com and its siblings look related.
+
+## Standard controls
+
+Every page carries two controls in the top right of the masthead: a **Back to main
+site** link to <https://lukahn.com/>, and a **light/dark toggle**. Both are small,
+and both have a trap.
+
+### Back to main site
+
+- A real `<a>` to `https://lukahn.com/`, not a button that runs a script.
+- `target="_blank" rel="noopener noreferrer"`. The new tab preserves whatever the
+  visitor was doing — in passkey-reflect, their reflected session — and `noopener`
+  is mandatory on any new-tab link.
+- Because it opens a new tab, say so in the accessible name:
+  `aria-label="Back to main site (opens in a new tab)"`. The visible text must
+  still be contained in that name (WCAG 2.5.3), so the visible label stays as the
+  first words.
+- Mark it with `aria-hidden="true"` "↗", never as the only cue.
+
+### Light/dark toggle
+
+Match lukahn.com exactly, so both sites behave the same:
+
+- `data-theme="light" | "dark"` on `<html>`; **absent means "follow the OS"**.
+- `<meta name="color-scheme" content="dark light">` plus the CSS `color-scheme`
+  property, so form controls and scrollbars match.
+- `localStorage.setItem('theme', …)` for the choice, read back on load. Guard
+  every access in `try/catch` — localStorage throws in some private modes — and
+  fall back to the OS preference.
+- `matchMedia('(prefers-color-scheme: light)')`, followed on change **only while
+  no explicit choice is stored**.
+- A `<button type="button">` whose label states the action ("Switch to dark
+  mode"), with the state mirrored in `aria-pressed`.
+- Two CSS blocks for the light theme: `[data-theme="light"]` and
+  `@media (prefers-color-scheme: light) { :root:not([data-theme]) { … } }`.
+  Duplicating them is deliberate — light then applies from the OS preference alone
+  when the script has not run — and the `:not([data-theme])` is what lets an
+  explicit choice win.
+
+**Load the theme script synchronously in `<head>`, before the stylesheet.** The CSP
+is `script-src 'self'`, so it cannot be inline, and if it is deferred to the end of
+the body like the app script then the dark theme paints first and flips. A blocking
+2KB file is the right trade.
+
+### The traps
+
+- **Do not put the controls on a gradient.** Contrast cannot be measured against
+  one — the composited colour depends on where the element lands — so 1.4.11
+  compliance becomes unverifiable and quietly position-dependent. A solid masthead
+  background with the lukahn.com teal as a 3px top edge keeps the look and makes
+  every value measurable.
+- **Light-mode borders must be much darker than they look.** The obvious mid-grey
+  fails 3:1 against a light panel and a light input fill. Solve against the
+  *darkest* background the border sits on, not the lightest.
+- **A filled button has a transparent border on purpose.** Its boundary is the
+  fill, so the fill must clear 3:1 against the page; the transparent border
+  measuring 1:1 is not a finding.
+- **The OS preference sets the default**, so adding the toggle changes what most
+  visitors see — the site stops being unconditionally dark.
+
+### Verifying both themes
+
+Measured, not eyeballed. For each theme, on a **populated** page — cards, tables,
+code blocks and alert styles only exist once there is data:
+
+1. For every element with text, composite the background up the ancestor chain
+   (alpha included) and check the ratio: 4.5:1 normal, 3:1 large.
+2. For every control, check the border against both its own fill and the adjacent
+   background: 3:1.
+3. Check the OS-default path as well as the explicit choice.
 
 ---
 
@@ -435,33 +735,49 @@ Rules:
 Copy into the PR or the repo's deployment notes.
 
 **Security**
-- [ ] Threat model written down
-- [ ] No secrets in code, logs, or the image
-- [ ] CSP and the other security headers on every response
+- [ ] Threat model written down, with the method named (STRIDE, LINDDUN, or why not)
+- [ ] Data inventory: what is collected, why, how long, who can see it — or "nothing"
+- [ ] Cryptography from a library: AEAD, unique nonces, per-purpose keys, constant-time compare, CSPRNG
+- [ ] Auth: parameterised queries, server-side validation, no unpickling, no open redirect, uploads contained
+- [ ] Resource limits: body size, header size, field count, handler timeout, parser recursion depth
+- [ ] No secrets in code, logs, URLs, build arguments, or the image
+- [ ] One secret per environment, injected at runtime, and rotatable without downtime
+- [ ] Secret scanning in CI **and** push protection; history scanned, not just the working tree
+- [ ] CSP and the other security headers on every response, with CSP reporting configured
+- [ ] `Permissions-Policy` denies what the site does not use
 - [ ] Sessions: `__Host-`, Secure, HttpOnly, SameSite, short TTL
 - [ ] 415 and 403 guards on state-changing endpoints
 - [ ] Rate limiting in the app *and* at the Cloudflare edge
-- [ ] `security.txt` published
+- [ ] Errors are generic to the user and detailed only in the log; no stack traces, no version banners, debug off
+- [ ] `security.txt` published, with a monitored contact
 - [ ] CAA, DNSSEC, SPF/DKIM/DMARC in DNS
 - [ ] Static scans clean: secrets, language linters, Dockerfile, workflows
 - [ ] Dependency audit clean; image and OS packages scanned
 - [ ] DAST baseline clean against the local container
 - [ ] Dependabot configured for every ecosystem, including `github-actions`
-- [ ] CI actions pinned by SHA with least-privilege `permissions`
-- [ ] Deployment at minimum resources; secrets from Secret Manager
-- [ ] Container runs non-root, read-only filesystem where possible
+- [ ] CI actions pinned by SHA, **third-party scanner images pinned by digest**, least-privilege `permissions`
+- [ ] Lockfiles committed and used; SBOM produced; image deployed by digest
+- [ ] Deployment at minimum resources; container non-root, read-only filesystem where possible
+- [ ] ATT&CK mapping records a detection column honestly, including "no detection"
+- [ ] Incident response: what to rotate, and how to redeploy a known-good digest
 - [ ] All assets self-hosted; no third-party runtime requests
+- [ ] Nothing in the docs claims coverage the code does not deliver
 
 **Accessibility**
 - [ ] WCAG 2.2 AA sweep run (axe and Lighthouse) and read
 - [ ] Keyboard pass complete; focus always visible
-- [ ] Contrast checked on every real colour pair, including muted text
+- [ ] Contrast measured on every real colour pair, in **every** theme, including muted text
+- [ ] Control boundaries (inputs, chips, buttons) clear 3:1 against fill *and* adjacent background
 - [ ] Reflow checked at 320px and 400% zoom
+- [ ] Targets at least 24×24 CSS px
 - [ ] One screen-reader pass through the primary task
 - [ ] AI disclosure visible near the top, and consistent with the README
 
 **Presentation**
 - [ ] Colours drawn from the lukahn.com palette
+- [ ] "Back to main site" link present, new tab, `noopener noreferrer`, accessible name notes it
+- [ ] Light/dark toggle present, matching lukahn.com's mechanics and covering both themes
+- [ ] Masthead background solid, so control contrast is measurable
 - [ ] Focus style carried over
 - [ ] Typography limited to Open Sans plus a monospace stack
 
