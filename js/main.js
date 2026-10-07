@@ -8,7 +8,7 @@
   var closeBtn = document.querySelector('.menu-close');
   var main = document.querySelector('main');
   var footer = document.querySelector('footer');
-  var FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
+  var FOCUSABLE = 'a[href], button:not([disabled]), summary, input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
   function openMenu() {
     document.body.classList.add('menu-open');
@@ -94,54 +94,5 @@
   if (document.querySelector('.articles')) {
     fitTitles();
     window.addEventListener('resize', fitTitles);
-  }
-
-  // Theme toggle (light/dark)
-  var themeToggle = document.querySelector('.theme-toggle');
-  var storedTheme = null;
-  try { storedTheme = localStorage.getItem('theme'); } catch (e) {}
-  var mql = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
-
-  function effectiveTheme() {
-    var attr = document.documentElement.getAttribute('data-theme');
-    if (attr === 'light' || attr === 'dark') return attr;
-    return (mql && mql.matches) ? 'light' : 'dark';
-  }
-
-  function updateToggle() {
-    if (!themeToggle) return;
-    var isLight = effectiveTheme() === 'light';
-    themeToggle.textContent = isLight ? 'Switch to dark mode' : 'Switch to light mode';
-    themeToggle.setAttribute('aria-pressed', String(isLight));
-  }
-
-  function applyTheme(theme) {
-    if (theme === 'light' || theme === 'dark') {
-      document.documentElement.setAttribute('data-theme', theme);
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-    }
-    updateToggle();
-  }
-
-  if (themeToggle) {
-    themeToggle.addEventListener('click', function () {
-      var next = effectiveTheme() === 'light' ? 'dark' : 'light';
-      try { localStorage.setItem('theme', next); } catch (e) {}
-      applyTheme(next);
-    });
-
-    // Apply the stored choice, or fall back to the OS preference.
-    applyTheme(storedTheme);
-
-    // Keep the label in sync if the OS theme changes and no choice is stored.
-    if (mql && mql.addEventListener) {
-      mql.addEventListener('change', function () {
-        var hasChoice = null;
-        try { hasChoice = localStorage.getItem('theme'); } catch (e) {}
-        if (hasChoice) return;
-        applyTheme(null);
-      });
-    }
   }
 })();

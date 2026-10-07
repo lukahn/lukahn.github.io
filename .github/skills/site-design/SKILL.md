@@ -562,7 +562,7 @@ the two in step.)
 # 3. Presentation (lukahn.com palette)
 
 Keep to the main site's colours. The palette comes from
-`lukahn.github.io/css/style.scss`; the site is a **dark theme** — a charcoal base
+`lukahn.github.io/css/_stylesheet.scss`; the site is a **dark theme** — a charcoal base
 with teal-blue and sage accents.
 
 | Role | Name | Hex |

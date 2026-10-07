@@ -40,6 +40,10 @@ This page defines technical terms and abbreviations used across the site.
 - **bcrypt** — a deliberately slow password-hashing function designed to resist brute-force attacks.
 - **PBKDF2** — Password-Based Key Derivation Function 2, used to derive cryptographic keys from passwords.
 - **NIST** — National Institute of Standards and Technology, a US standards body that publishes security guidance.
+- **Base64** — a text encoding that represents binary data using a limited alphabet, often used to move keys and certificates through text-only formats.
+- **CBOR** — Concise Binary Object Representation, a compact binary data format.
+- **COSE** — CBOR Object Signing and Encryption, a format for keys and signatures built on CBOR.
+- **JWK** — JSON Web Key, a JSON representation of a cryptographic key.
 
 ## Accessibility
 
@@ -65,9 +69,15 @@ This page defines technical terms and abbreviations used across the site.
 - **PST** — Personal Storage Table, the mailbox file format used by Outlook.
 - **MFA** — Multi-Factor Authentication, requiring more than one proof of identity to sign in.
 - **Passkey** — a passwordless, FIDO-based credential stored on a device or in a password manager.
+- **FIDO2** — Fast IDentity Online 2, the standard behind passkeys and hardware security keys, built on WebAuthn and CTAP2.
+- **WebAuthn** — Web Authentication, the browser API within FIDO2 that lets a page create and use a public-key credential.
 - **OTP** — One-Time Password, a short-lived code used as a second factor.
 - **TOTP** — Time-based One-Time Password, an OTP generated from a shared secret and the current time.
 - **Thunderbird** — Mozilla's free, open-source e-mail client.
+- **RP ID** — Relying Party ID, the domain a credential is bound to; the browser includes a hash of it in the authenticator data.
+- **AAGUID** — Authenticator Attestation Globally Unique Identifier, a 128-bit value identifying the make and model of an authenticator.
+- **YubiKey** — a hardware security key made by Yubico that can hold FIDO2 credentials, among others.
+- **Bitwarden** — an open-source password manager that can also store passkeys.
 
 ## Software and platforms
 

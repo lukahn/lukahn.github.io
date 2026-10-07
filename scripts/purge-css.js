@@ -59,7 +59,7 @@ const FA_ICONS = [
   'fa-linkedin', 'fa-stack-overflow', 'fa-facebook', 'fa-instagram',
   'fa-reddit-alien', 'fa-rss',
   'fa-house', 'fa-box-archive', 'fa-magnifying-glass', 'fa-bars', 'fa-xmark',
-  'fa-heart', 'fa-tags', 'fa-book',
+  'fa-heart', 'fa-tags', 'fa-book', 'fa-toolbox',
 ];
 
 const safelist = {

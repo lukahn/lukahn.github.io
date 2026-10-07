@@ -8,6 +8,18 @@
       <li><a href="{{ site.baseurl }}/posts/" {% if page.url == '/posts/' or page.url == '/posts-by-categories/' %}aria-current="page"{% endif %}><i class="fa-solid fa-box-archive" aria-hidden="true"></i> All Posts</a></li>
       <li><a href="{{ site.baseurl }}/search/" {% if page.url == '/search/' %}aria-current="page"{% endif %}><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Search</a></li>
       <li><a href="{{ site.baseurl }}/glossary/" {% if page.url == '/glossary/' %}aria-current="page"{% endif %}><i class="fa-solid fa-book" aria-hidden="true"></i> Glossary</a></li>
+      {% if site.data.sites %}
+      <li>
+        <details>
+          <summary><i class="fa-solid fa-toolbox" aria-hidden="true"></i> Tools</summary>
+          <ul class="submenu">
+            {% for item in site.data.sites %}
+            <li><a href="{{ item.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ item.name }} (opens in new tab)">{{ item.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </details>
+      </li>
+      {% endif %}
     </ul>
 
     {% include social_links.html %}

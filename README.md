@@ -11,7 +11,7 @@ Based on the [Carte Noire](https://github.com/jacobtomlinson/carte-noire) Jekyll
 Third-party assets are vendored locally, so no external requests are made at page load.
 
 ### JavaScript
-- Vanilla JavaScript — menu, theme toggle, and title fitting (no jQuery)
+- Vanilla JavaScript — menu and title fitting (`js/main.js`), plus the light/dark theme (`js/theme.js`, loaded synchronously in `<head>` so the stored choice is applied to the first paint) — no jQuery
 - [highlight.js](https://highlightjs.org/) (only on pages with code blocks)
 - [Simple Jekyll Search](https://github.com/christian-fei/Simple-Jekyll-Search) (search page only)
 - [MathJax](https://www.mathjax.org/) v4 (only on pages using LaTeX)

@@ -1,0 +1,9 @@
+{
+  // Jekyll requires the front matter in css/style.scss, but `---` is not valid
+  // SCSS, so the SCSS language service reports a false "{ expected" error there.
+  // Treat the entry point as plain text; the styles live in css/_stylesheet.scss,
+  // which keeps the scss language mode and is validated normally.
+  "files.associations": {
+    "**/css/style.scss": "plaintext"
+  }
+}

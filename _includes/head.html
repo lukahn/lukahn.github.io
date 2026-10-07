@@ -14,6 +14,11 @@
 <link rel="preload" href="{{ site.baseurl }}/fonts/googlefonts/montserrat/v31/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCtr6Hw5aXo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{{ site.baseurl }}/fonts/googlefonts/open-sans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2" as="font" type="font/woff2" crossorigin>
 
+<!-- Apply the stored light/dark choice before the stylesheet, so the first
+     paint is already correct. Synchronous on purpose, and a separate file
+     because the CSP is script-src 'self' so it cannot be inline. -->
+<script src="{{ site.baseurl }}/js/theme.js"></script>
+
 <link rel="stylesheet" href="{{ site.baseurl }}/css/vendor.css">
 <link rel="stylesheet" type="text/css" media="all" href="{{ site.baseurl }}/css/style.css" />
 
