@@ -345,6 +345,7 @@ container first, and against the deployed origin only when you need to.
 | Templated checks | nuclei |
 | TLS and headers | testssl.sh against the origin; Mozilla Observatory, SSL Labs and securityheaders.com against the public edge |
 | Accessible path | axe (`@axe-core/cli`), pa11y, Lighthouse |
+| Accessibility requirements | IBM Equal Access Accessibility Checker — `accessibility-checker` (Apache-2.0, [IBMa/equal-access](https://github.com/IBMa/equal-access)). Reports against IBM Accessibility Requirements, currently v7.3 |
 
 ### Rules for scanning
 
@@ -460,10 +461,33 @@ container first, and against the deployed origin only when you need to.
 # 2. Accessibility (WCAG 2.2 AA)
 
 Every site conforms to WCAG 2.2 Level AA — that is every Level A and Level AA
-success criterion. Items tagged **site** belong to whoever builds the theme and
+success criterion — and is checked against **IBM Accessibility Requirements
+version 7.3**. Items tagged **site** belong to whoever builds the theme and
 templates; **content** items belong to whoever writes the words. (The
 `author-content` skill carries the content-side list for the Jekyll site; keep
 the two in step.)
+
+### Why IBM's requirements as well as WCAG
+
+IBM's requirements are their own checklist, not a reprint of WCAG. They track the
+success criteria and add the mapping to the regulations IBM has to satisfy, which
+is what makes them useful as a second opinion: working to two independently
+maintained checklists catches things a single reading does not.
+
+* **Version 7.3 is current**, and officially replaced 7.2 on 1 October 2024. It
+  is the version that folds in the newer **WCAG 2.2** success criteria, so it is
+  the one that lines up with the target above. Working to 7.2 would silently miss
+  the 2.2 additions.
+* **IBM versions this document.** Do not quote a version from memory — check
+  <https://www.ibm.com/able/requirements/requirements/> for the current one before
+  claiming conformance, the same way you would check a spec revision. Citing a
+  superseded version is a claim you cannot support.
+* **Requirements are filterable by standard and technology** on that page, so
+  select the standards that actually apply rather than claiming the whole set.
+* Where IBM's wording and WCAG's differ, satisfy **both**. They are not in
+  conflict, but IBM often states a requirement as an outcome ("the user can pause
+  it") rather than a technique, which is a useful test of whether the thing
+  actually works.
 
 ### Perceivable
 
@@ -534,15 +558,24 @@ the two in step.)
 
 ### Verifying it
 
-1. Automated sweep with axe and Lighthouse on every page — then read the output,
-   because these tools find roughly a third of real issues.
+1. Automated sweep with **axe**, **Lighthouse** and the **IBM Equal Access
+   Accessibility Checker** on every page — then read the output, because these
+   tools between them still find only part of the real issues.
+   * IBM's checker is the one that reports against IBM's requirements rather than
+     only WCAG, so it is the run that evidences the conformance claimed above. It
+     ships as a browser extension and as the Apache-2.0 `accessibility-checker`
+     npm package (CLI and Node API) from
+     [IBMa/equal-access](https://github.com/IBMa/equal-access).
+   * Run it against a **populated** page, not the empty one.
 2. **Keyboard pass:** tab through the whole site. Every control reachable, focus
    always visible, no trap, sensible order.
 3. **Contrast:** check every foreground/background pair actually used, including
    muted text and placeholder text.
 4. **Reflow:** 320px wide, and 400% zoom.
 5. **Screen reader:** one pass through the primary task with a real screen reader.
-6. Record known gaps in the repo docs rather than leaving them implicit.
+6. **Record the checker output**, including the version or rulepack it ran, so the
+   claim can be reproduced later.
+7. Record known gaps in the repo docs rather than leaving them implicit.
 
 ## AI disclosure
 
@@ -645,14 +678,23 @@ and both have a trap.
 ### Back to main site
 
 - A real `<a>` to `https://lukahn.com/`, not a button that runs a script.
-- `target="_blank" rel="noopener noreferrer"`. The new tab preserves whatever the
-  visitor was doing — in passkey-reflect, their reflected session — and `noopener`
-  is mandatory on any new-tab link.
-- Because it opens a new tab, say so in the accessible name:
-  `aria-label="Back to main site (opens in a new tab)"`. The visible text must
-  still be contained in that name (WCAG 2.5.3), so the visible label stays as the
-  first words.
-- Mark it with `aria-hidden="true"` "↗", never as the only cue.
+- **Same window.** Do not add `target="_blank"`. A "back" control that navigates in
+  place is what visitors expect, and it keeps the browser's own Back button
+  meaningful. Reserve a new tab for the case where following the link would destroy
+  work the visitor is mid-way through, and note that even then it is a trade: a
+  forced new tab also leaves them with a stray tab and a broken Back button.
+- If you ever do open a new tab, `rel="noopener noreferrer"` is mandatory and the
+  accessible name must say so — `aria-label="Back to main site (opens in a new
+  tab)"`, keeping the visible label as the first words of that name (WCAG 2.5.3).
+- **No "↗" marker**, because that convention means "opens in a new tab" and on a
+  same-window link it is a false signal.
+- **The visible text is the accessible name.** "Back to main site" already says
+  what it does, so no `aria-label` is needed, and adding one risks breaking 2.5.3
+  without adding anything.
+- **Say what leaving costs.** A same-window link discards in-page state — in
+  passkey-reflect it ends the reflected session, because `GET /` rotates it. Decide
+  deliberately, and record the consequence in the docs rather than discovering it
+  from a bug report.
 
 ### Light/dark toggle
 
@@ -718,7 +760,8 @@ code blocks and alert styles only exist once there is data:
 4. **Build** with the palette, semantic HTML, and self-hosted assets.
 5. **Local checks:** lint, tests, static scan, dependency audit, build the image,
    boot it, run the DAST baseline and the accessibility sweep against
-   `localhost`.
+   `localhost` — axe, Lighthouse, and the IBM Equal Access Accessibility Checker
+   for IBM Accessibility Requirements v7.3.
 6. **CI:** the same checks on every push, plus Dependabot and SHA-pinned actions.
 7. **Deploy to Scaleway** at minimum resources, with secrets from Secret Manager,
    and the hostname registered as a container domain.
@@ -728,7 +771,8 @@ code blocks and alert styles only exist once there is data:
    headers, the 415/403 guards, the keyboard and screen-reader path, and a DAST
    run against the origin.
 10. **Record** the deployed state, the versions, and every known gap in the repo
-    docs.
+    docs — including the accessibility checker version or rulepack, so the
+    conformance claim can be reproduced.
 
 # Checklist
 
@@ -765,6 +809,10 @@ Copy into the PR or the repo's deployment notes.
 
 **Accessibility**
 - [ ] WCAG 2.2 AA sweep run (axe and Lighthouse) and read
+- [ ] IBM Accessibility Requirements checked with the IBM Equal Access
+      Accessibility Checker, on a populated page, and the output recorded
+- [ ] The current IBM requirements version confirmed rather than assumed (v7.3 at
+      the time of writing)
 - [ ] Keyboard pass complete; focus always visible
 - [ ] Contrast measured on every real colour pair, in **every** theme, including muted text
 - [ ] Control boundaries (inputs, chips, buttons) clear 3:1 against fill *and* adjacent background
@@ -775,7 +823,7 @@ Copy into the PR or the repo's deployment notes.
 
 **Presentation**
 - [ ] Colours drawn from the lukahn.com palette
-- [ ] "Back to main site" link present, new tab, `noopener noreferrer`, accessible name notes it
+- [ ] "Back to main site" link present, same window, no `target="_blank"`, no "↗" marker
 - [ ] Light/dark toggle present, matching lukahn.com's mechanics and covering both themes
 - [ ] Masthead background solid, so control contrast is measurable
 - [ ] Focus style carried over
