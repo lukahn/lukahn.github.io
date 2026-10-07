@@ -1,6 +1,6 @@
 ---
 name: site-design
-description: 'Design, build and ship a website to a fixed baseline: security (OWASP Top 10, MITRE ATT&CK and D3FEND, scanning tools, dependency automation), minimal data collection, WCAG 2.2 AA accessibility with an AI disclosure, resource efficiency, and the lukahn.com visual language. Use when: starting a new site or web app; adding a page, endpoint, form, script or dependency to an existing site; setting up CI, Dependabot or deployment; deploying to Scaleway behind Cloudflare; or reviewing an existing site against these requirements.'
+description: 'Design, build and ship a website to a fixed baseline: security (OWASP Top 10, MITRE ATT&CK and D3FEND, NIST CSF, ISO/IEC 27001, CIS Controls, ASD Essential Eight, scanning tools, dependency automation), minimal data collection, WCAG 2.2 AA accessibility with an AI disclosure, resource efficiency, and the lukahn.com visual language. Use when: starting a new site or web app; adding a page, endpoint, form, script or dependency to an existing site; setting up CI, Dependabot or deployment; deploying to Scaleway behind Cloudflare; or reviewing an existing site against these requirements.'
 ---
 
 # Designing and shipping a site
@@ -258,6 +258,21 @@ almost nothing, and the mapping records that rather than hiding it.
 - **Do not overstate coverage** in the README. If the docs claim a property the
   code does not deliver, that is itself a finding — and it is worse than the gap,
   because it stops anyone looking.
+- **"Compliant" is not a word these frameworks offer.** NIST states that it does
+  not certify or endorse CSF implementations, and CIS's accreditation programme
+  accredits vendors and assessors rather than the sites they assess. Write
+  "mapped to CSF 2.0", not "CSF compliant".
+- **ISO/IEC 27001 certification is an audit, not an opinion.** Only an accredited
+  certification body can certify, and only after Stage 1 and Stage 2 audits. Say
+  the site "uses ISO/IEC 27001 Annex A" unless a certificate exists.
+- **A maturity level is an evidence claim about an organisation.** Claiming
+  Essential Eight ML2 or ML3 for a site that assessed two of the eight strategies
+  is the same overstatement as reporting a scanner result as a clean bill of
+  health.
+- **Control identifiers and versions decay.** ISM controls are renumbered
+  quarterly, CIS safeguard counts shift between versions, and ISO editions pick up
+  amendments. Look the identifier up at the source rather than copying it from
+  memory — the same rule as D3FEND.
 
 ## Frameworks to check against
 
@@ -303,6 +318,147 @@ logs and Cockpit, and Evict/Restore to redeploying a known-good image.
 
 D3FEND countermeasure identifiers change between framework versions — look the
 current ID up at d3fend.mitre.org rather than copying one from memory.
+
+The next four are a different kind of document. OWASP, ATT&CK and D3FEND are
+technical: they describe mistakes to avoid and behaviour to expect. NIST CSF,
+ISO/IEC 27001, the CIS Controls and ASD's frameworks were written for an
+**organisation** — they assume staff, committees and an audit cycle, and a
+one-person site cannot satisfy them in that sense. Each has a part that transfers
+anyway, and the honest move is to take that part and say plainly which part you
+did not.
+
+### NIST CSF 2.0 — the structure to hang the rest on
+
+The NIST Cybersecurity Framework 2.0 (NIST CSWP 29, February 2024) is the
+organisation-neutral spine: six Functions, broken into Categories (`GV.SC`) and
+Subcategories (`GV.OC-01`) that read as plain outcomes. It is voluntary, and NIST
+states that it offers **no certification or endorsement** of implementations.
+
+| Function | What it means for a site | Where it already lives in this skill |
+|---|---|---|
+| **Govern (GV)** | Who decides, what risk is acceptable, what supply chain is allowed | The four rules at the top; the threat model committed to the repo |
+| **Identify (ID)** | Know what you actually run — assets, dependencies, data, where secrets live | The inventory step under *How to actually apply ATT&CK*; manifests and SBOM |
+| **Protect (PR)** | The controls themselves | The whole *Engineering rules* section |
+| **Detect (DE)** | Know when something is wrong | Cloudflare edge logs, Cockpit, an error-rate alert — thin, and say so |
+| **Respond (RS)** | What happens when it goes wrong | *Incident response* above |
+| **Recover (RC)** | Get back to a known-good state | Redeploy the known-good image by digest; stateless by design |
+
+- **Use the Profiles; skip the Tiers.** A **Current Profile** and a **Target
+  Profile** are the parts that pay for themselves: write down what you do now,
+  what you intend to do, and the gap between them. The gap list *is* the backlog.
+  The four Tiers (Partial, Risk Informed, Repeatable, Adaptive) measure
+  organisational practice, and there is nothing there for a single site to
+  measure.
+- **NIST SP 1300** is the Small Business Quick-Start guide, and it is about the
+  right length for a project this size.
+- Read CSWP 29 once in full. It is short, and it is a better checklist than any
+  summary of it.
+
+### ISO/IEC 27001 — a control catalogue you can borrow
+
+ISO/IEC 27001 is an **information security management system** standard with a
+control catalogue bolted on, and the two halves have different uses.
+
+- **Clauses 4–10** are the management system: context, leadership, planning,
+  support, operation, performance evaluation, improvement. This is what actually
+  gets audited, and for a stateless one-person site most of it has no content. Do
+  not build a paper ISMS to satisfy it.
+- **Annex A** is the half that transfers: **93 controls across four themes** —
+  organisational, people, physical and technological — each explained by
+  ISO/IEC 27002:2022, which carries the guidance and **cannot itself be certified
+  against**.
+- **Write a Statement of Applicability anyway.** One line per Annex A control:
+  applicable, or not applicable and why. For a site, most of the people and
+  physical themes answer "no staff, no premises", and the whole exercise takes
+  under an hour. It is a genuinely useful review, and it forces a written reason
+  for every control you skip instead of a silent omission.
+- **Certification is a third-party audit, not a self-assessment.** An accredited
+  certification body runs Stage 1 (readiness) and Stage 2 (conformity), then
+  surveillance audits inside a three-year cycle, against the evidence in the SoA.
+  ISO itself issues no certificates, and certification is optional — implementing
+  Annex A without certifying is normal and legitimate.
+- **The current edition is ISO/IEC 27001:2022**, with
+  **ISO/IEC 27001:2022/Amd 1:2024** ("Climate action changes") layered on. Check
+  the edition at iso.org rather than assuming; amendments do not announce
+  themselves.
+- **The language matters.** "Aligned with ISO/IEC 27001 Annex A" is a statement
+  you can support. "ISO 27001 certified" is not, unless an accredited body has
+  certified you.
+
+### CIS Controls — the order to do things in
+
+The CIS Critical Security Controls are the prescriptive, prioritised version of
+the same material, and they are **free to use**. CIS Controls **v8.1** has **18
+Controls and 153 Safeguards**.
+
+- **Implementation Groups are the point.** **IG1** is "essential cyber hygiene"
+  and is the starting set, **IG2** builds on IG1, and **IG3** is all of it. Read
+  IG1 and work it in order rather than cherry-picking from the top.
+- **Record the non-applicable safeguards as a result.** Many IG1 safeguards are
+  about endpoints, users and email that a container-hosted site simply does not
+  have. "Not applicable, because there are no endpoints" is a finding worth
+  writing down, not a gap to paper over.
+- **v8.1 aligns with CSF 2.0** — it added a Governance function mirroring the
+  Govern Function, so the six-function table above doubles as the CIS structure.
+- **Do not quote per-IG safeguard counts from memory.** They move between
+  versions; check the current figures at cisecurity.org.
+- **There is no "CIS compliant" badge for a site.** The CIS Controls
+  Accreditation programme accredits the vendors and assessors who provide CIS
+  services, and says nothing about the sites they assess.
+- The **CIS Benchmarks** are a separate product from the Controls. For this stack
+  the **CIS Docker Benchmark** is the relevant one — actively maintained, **v1.9.0
+  at the time of writing**.
+
+### ASD Essential Eight and the ISM — the Australian baseline
+
+ASD (the Australian Signals Directorate, through the ACSC) publishes two things
+worth using, and both are honest about their own limits.
+
+**The Essential Eight** is eight prioritised mitigation strategies, each with a
+maturity level. The eight, using the maturity model's own headings:
+
+1. Application control
+2. Patch applications
+3. Restrict Microsoft Office macros
+4. User application hardening
+5. Restrict administrative privileges
+6. Patch operating systems
+7. Multi-factor authentication
+8. Regular backups
+
+- **Maturity Levels 0–3.** Level 1 is commodity tradecraft; Level 3 is adaptive
+  and least reliant on publicly available tooling. A level is an evidence claim
+  about a whole organisation, and ASD requires no independent certification —
+  which means nothing validates the claim but you.
+- **Be honest about applicability.** ASD designed the Essential Eight for
+  "internet-connected information technology networks", and it is endpoint- and
+  largely Windows-shaped. Strategies 3 and 4 (Office macros, user application
+  hardening) and much of strategy 1 have no analogue in a Linux container with no
+  users and no shell. The ones that do transfer land on work already described
+  above: **patch applications** (Dependabot, dependency audits), **patch
+  operating systems** (rebuild on a current base image rather than patching in
+  place), **restrict administrative privileges** (non-root, dropped capabilities,
+  no-new-privileges, read-only root filesystem), **multi-factor authentication**
+  (for your own build, registrar and cloud accounts — never for the site's
+  visitors, who have no accounts at all), and **regular backups** (the image
+  digest and the repo).
+- **The ISM** is ASD's control catalogue, published as "Information security
+  manual (Month Year)" and updated **quarterly**. Controls are numbered
+  `ISM-NNNN` with a revision, a date, an applicability field, and an **embedded
+  Essential Eight mapping** — so a control can be read off alongside the maturity
+  level it belongs to.
+- **The ISM's principles are now organised under the same six Functions as CSF
+  2.0** — Govern, Identify, Protect, Detect, Respond, Recover, with identifiers
+  like `GOV-01` — so one CSF-shaped description of the site can be pointed at
+  both without a translation table.
+- **ASD's other relevant material:** *Secure by Design* and *Secure by Default*
+  (the joint international guide), the Small Business Cyber Security Guide, and
+  the Blueprint for Secure Cloud. There is **no ASD container or Kubernetes
+  benchmark** — ASD hardening guidance stops at operating systems, web and email,
+  and for the container the CIS Docker Benchmark is the reference.
+- **The links move.** The old `/essential-cyber-security/…` paths now redirect
+  under `/business-government/asds-cyber-security-frameworks/…`; cite the current
+  path rather than a copied one.
 
 ### Also worth checking
 
@@ -803,6 +959,11 @@ Copy into the PR or the repo's deployment notes.
 - [ ] Lockfiles committed and used; SBOM produced; image deployed by digest
 - [ ] Deployment at minimum resources; container non-root, read-only filesystem where possible
 - [ ] ATT&CK mapping records a detection column honestly, including "no detection"
+- [ ] CSF 2.0 Current and Target Profiles written down, and the gap list tracked as work
+- [ ] ISO/IEC 27001 Annex A walked, with a Statement of Applicability giving a reason for every control not applied
+- [ ] CIS Controls IG1 checked safeguard by safeguard, with the non-applicable ones recorded as such
+- [ ] Essential Eight strategies assessed, and the ones with no analogue in this design named as such
+- [ ] No framework conformance claimed anywhere that has not been audited (see *What not to claim*)
 - [ ] Incident response: what to rotate, and how to redeploy a known-good digest
 - [ ] All assets self-hosted; no third-party runtime requests
 - [ ] Nothing in the docs claims coverage the code does not deliver
