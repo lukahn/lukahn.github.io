@@ -14,7 +14,7 @@
           <summary><i class="fa-solid fa-toolbox" aria-hidden="true"></i> Tools</summary>
           <ul class="submenu">
             {% for item in site.data.sites %}
-            <li><a href="{{ item.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ item.name }} (opens in new tab)">{{ item.name }}</a></li>
+            <li><a href="{{ item.url }}">{{ item.name }}</a></li>
             {% endfor %}
           </ul>
         </details>
