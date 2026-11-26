@@ -75,7 +75,37 @@ In this lab, the templates published on the CA before the install were: `Directo
 
 The pattern held for the whole rebuild: the migration script never publishes a template on the CA, and the SCEP enrolment worked end to end.
 
-The practical reading is that **publication governs what the CA advertises, not whether it will issue**. A request that names a template object the CA can read is decided by that template's ACL and the CA's permissions. Publication is what drives the lists — the CA console, Web Enrollment, autoenrollment policy — and those paths do need it. A direct enrolment request does not.
+The practical reading is that **publication governs what the CA advertises, not whether it will issue**. A request that names a template object the CA can read is decided by that template's ACL and the CA's permissions. Publication is what drives the lists — the CA console, Web Enrollment, autoenrollment policy — and those direct paths do need it.
+
+One exception, which is worth knowing before you delete a template from the list: **NDES itself checks it**. The admin page refuses to mint a challenge password if the CA is not enabled to issue the *device* template, and says so in as many words. So the template devices receive belongs in the published list; the RA templates do not.
+
+<br>
+## The minimum set of permissions
+
+Establishing that Enterprise Admin isn't needed is one thing; establishing what *is* needed took longer. The way to find out was to scope a working build down and remove grants until it broke, one at a time. Every right in this table is load-bearing:
+
+| Identity | Where | Right | What fails without it |
+| --- | --- | --- | --- |
+| NDES server computer account (`NDES$`), or a group holding them | RA templates and the server template | **Read + Enroll** | the RA and server certificates cannot be enrolled |
+| The application pool identity | **CA** → Properties → Security | **Request Certificates** | `mscep_admin` cannot mint a password: *"You do not have sufficient permission to enroll with SCEP"* |
+| The application pool identity | **the device template** | **Read + Enroll** | the device's enrolment is denied with `0x80094012`, *Denied by Policy Module* |
+| Whoever requests a challenge password | the same device template | **Read + Enroll** | `mscep_admin` refuses: *"cannot provide its password because the user does not have Enroll permissions…"* |
+
+The middle two rows are the interesting ones, because they are **two checks against the same template by two different identities**, and they fail with completely different messages:
+
+* When you ask the admin page for a password, NDES checks **you** — the caller — against the device template. It will not issue an authorisation token for a certificate type you could not enrol yourself.
+* When the device's request is submitted, the CA checks **the account NDES submits as**, which is the application pool identity.
+
+Getting the first one right does not get you the second, and the errors don't point at each other. We removed each grant in turn to confirm it: the failure moves between those two messages rather than disappearing.
+
+Microsoft documents the second — the NDES service account needs Read and Enroll on the template — but not the first, which is why it took two rounds to find.
+
+Two habits make this much easier to live with:
+
+* **Use groups, not individuals.** One for the servers, one for the humans who are allowed to mint passwords. Enroll on the device template is the right to authorise a device certificate, so granting it to "everyone who might need to test" quietly removes the boundary you are trying to draw.
+* **Prefer explicit accounts to `Authenticated Users`.** It is tempting to leave Request Certificates on Authenticated Users on the CA because everything then works, but that admits every domain principal as a requester. The template ACLs still gate what they can obtain — it is simply not the narrow grant that the rest of this design is aiming for.
+
+What you can then delete: Enterprise Admin and Domain Admin once the key and the account exist, the old user service account once a gMSA is in use, and anything added "just to test".
 
 I would not build a design on that alone, because "it worked for me" is not a specification. But it is the difference between granting a service account Enroll on one template and granting an administrator the ability to reconfigure a CA.
 
