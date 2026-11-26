@@ -54,7 +54,17 @@ This is the part I most wanted to see, so I diffed the domain controller's two n
 
 No objects created. No objects deleted. No group membership changed. Every other difference between the two exports was `lastLogon` and `logonCount` noise from machines logging on.
 
-So the wizard did nothing *structural* to Active Directory. Enterprise Admin was never about a directory right. It was about **enrolment**: the wizard has to obtain the RA certificates, and whether the CA issues them depends on the template's access control list and the CA's own permissions. The default templates grant Enroll to privileged humans rather than to service accounts, so the wizard is run as one. Enterprise Admin is the shortest path to "this identity can enrol", not a requirement of the product.
+So the wizard did nothing *structural* to Active Directory. Enterprise Admin was never about a directory right. It was about **enrolment**: the wizard has to obtain the RA certificates, and whether the CA issues them depends on the template's access control list and the CA's own permissions.
+
+And this is the part worth being precise about:
+
+**Enterprise Admin is used because it can issue a certificate from a template that exists only in Active Directory — one that has never been added to the CA.**
+
+That is not a workaround or an accident of the wizard; it is the capability being purchased. The RA templates the wizard enrols from are certificate template objects under `CN=Certificate Templates` in the Configuration partition, and they do not need to appear in the CA's own published list for a request to be issued from them. Enterprise Admins hold Full Control on every template object — inherited from the Certificate Templates container — and on the CA itself, so no template ACL can refuse them and no unpublished template is out of reach. They are the identity that *cannot* be told "no", which is exactly what a wizard has to assume, because it does not know in advance which template an operator will pick or whether anyone thought to publish it.
+
+The lab demonstrates the mechanism rather than the privilege. The signing template the rebuild uses, `MachineEnrollmentAgent`, was never in the CA's published list at any point — the earlier capture shows fifteen templates published and that is not one of them. The CA issued from it anyway, twice: once to the Enterprise Admin account during the original wizard run, and once to the NDES server's computer account during the rebuild.
+
+So the requirement is narrower than the role. **Any identity granted Read + Enroll on those templates can do the same thing**, published or not — which is what makes the rebuild possible without an Enterprise Admin at all, and why the whole capability can be replaced by a group on a template ACL.
 
 Which suggests the obvious alternative: give Enroll to something more appropriate and enrol as that instead. The CA database records the requester of every request, so you can watch this change. In the lab, the wizard produced requests from the Enterprise Admin account; the rebuild produces the same certificates requested by the NDES server's **computer account**. `Get-Certificate -CertStoreLocation LocalMachine\My` always runs in machine context, whatever credential you supply, so the RA templates simply need Enroll for the servers — a group is enough.
 
