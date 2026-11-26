@@ -1,4 +1,6 @@
 # Other websites hosted by Luke, listed under "Tools" in the navigation menu.
 # Add a new entry (name + url) to reveal another site.
+- name: cert-scanner
+  url: https://cert-scanner.lukahn.com/
 - name: passkey-reflect
   url: https://passkey-reflect.lukahn.com/

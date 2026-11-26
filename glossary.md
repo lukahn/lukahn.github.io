@@ -29,6 +29,12 @@ This page defines technical terms and abbreviations used across the site.
 - **OCR** — Optical Character Recognition, converting images of text into machine-readable text.
 - **EDR** — Endpoint Detection and Response, security software that watches endpoints for malicious behaviour and supports incident response.
 - **CSP** — Content Security Policy, a browser standard that restricts which resources a page can load.
+- **CT** — Certificate Transparency, public append-only logs where certificate authorities record the certificates they issue.
+- **ASN** — Autonomous System Number, a number identifying a network and the range of internet addresses it announces.
+- **CRL** — Certificate Revocation List, a list an issuer publishes of certificates it has withdrawn before their expiry.
+- **PQC** — Post-Quantum Cryptography, cryptographic algorithms designed to resist attack by quantum computers.
+- **HSTS** — HTTP Strict Transport Security, a response header that tells browsers to use HTTPS only for a site.
+- **CSRF** — Cross-Site Request Forgery, an attack that tricks a signed-in browser into sending a request the user did not intend.
 - **VirusTotal** — a free service that scans files and URLs against many antivirus engines.
 - **CRX** — the packaged file format used for Chrome extensions.
 - **CSR** — Certificate Signing Request, a block of text sent to a certificate authority when requesting a certificate.
@@ -93,6 +99,7 @@ This page defines technical terms and abbreviations used across the site.
 
 ## General
 
+- **CSV** — Comma-Separated Values, a plain-text format for tabular data.
 - **BBC** — British Broadcasting Corporation, the UK public broadcaster behind BBC iPlayer.
 - **Tesseract** — an open-source OCR engine.
 - **README** — a file that describes a project and its usage.
